@@ -24,6 +24,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_CHAMPIONSHIP = "Championship";
     public static final String TABLE_NAME_TRACK = "Track";
     public static final String TABLE_NAME_USER = "User";
+    public static final String TABLE_NAME_VEHICLE = "Vehicle";
 
     public static final String TABLE_NAME_TRACK_USER = "Track_User";
     public static final String TABLE_NAME_CHAMPIONSHIP_USER = "Championship_User";
@@ -59,6 +60,10 @@ public class SQLHelper extends SQLiteOpenHelper {
     public static final String USER_PHONENUMBER = "phonenumber";
     public static final String USER_TAKE_PART_CHAMPIONSHIP = "championship";
 
+    // Title of Columns of vehicle
+    public static final String VEHICLE_ID = "id_vehicle";
+    public static final String VEHICLE_NAME = "name";
+
     // N:M table -> User and Track
     public static final String TRACK_USER_IDTRACK = "id_track";
     public static final String TRACK_USER_IDUSER = "id_user";
@@ -67,7 +72,9 @@ public class SQLHelper extends SQLiteOpenHelper {
     public static final String CHAMPIONSHIP_USER_IDCHAMPIONSHIP = "id_championship";
     public static final String CHAMPIONSHIP_USER_IDUSER = "id_user";
 
-
+    // *************************************************************************
+    //                      create table
+    // *************************************************************************
     // Championship_user
     public static final String TABLE_CREATE_CHAMPIONSHIP_USER = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_CHAMPIONSHIP_USER + "("
@@ -128,6 +135,13 @@ public class SQLHelper extends SQLiteOpenHelper {
             + USER_TAKE_PART_CHAMPIONSHIP + " BOOLEAN" +
             ")";
 
+    public static final String TABLE_CREATE_VEHICLE = "CREATE TABLE IF NOT EXISTS "
+            + TABLE_NAME_VEHICLE
+            + "("
+            + VEHICLE_ID + "INTEGER PRIMARY KEY, "
+            + VEHICLE_NAME + " TEXT"
+            + ")";
+
     public SQLHelper(Context context, SQLiteDatabase.CursorFactory factory) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
@@ -144,6 +158,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         db.execSQL(TABLE_CREATE_USER);
         db.execSQL(TABLE_CREATE_TRACK_USER);
         db.execSQL(TABLE_CREATE_CHAMPIONSHIP_USER);
+        db.execSQL(TABLE_CREATE_VEHICLE);
     }
 
     @Override
@@ -155,6 +170,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CHAMPIONSHIP_USER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TRACK_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_VEHICLE);
 
         // create fresh tables
         onCreate(db);
