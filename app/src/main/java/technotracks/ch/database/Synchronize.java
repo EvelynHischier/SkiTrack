@@ -21,16 +21,18 @@ import ch.technotracks.backend.trackApi.model.Track;
  */
 public class Synchronize {
 
-    public class SyncTrack extends AsyncTask<Void, Void, List<Track>>{
+    public class SyncTrack extends AsyncTask<Void, Void, Long>{
         private Context context;
         private TrackApi myService = null;
+        private List<Track> tracks;
 
-        public SyncTrack(Context context){
+        public SyncTrack(Context context, List<Track> tracks){
             this.context = context;
+            this.tracks = tracks;
         }
 
         @Override
-        protected List<Track> doInBackground(Void... params) {
+        protected Long doInBackground(Void... params) {
 
             // singleton
             if (myService == null){
@@ -47,16 +49,16 @@ public class Synchronize {
             }
 
             try {
-                return myService.list().execute().getItems();    //listQuote().execute().getItems();
-            } catch (IOException e) {
-                return Collections.EMPTY_LIST;
-            }
-        }
+                // insert into app engine
+                for(Track track : tracks) {
+                    myService.insert(track).execute();
+                }
+                return 1l;
 
-        @Override
-        protected void onPostExecute(List<Track> result) {
-            for (Track q : result) {
-                Toast.makeText(context, q.getName()+" : "+q.getId(), Toast.LENGTH_LONG).show();
+                //get
+                //return myService.list().execute().getItems();
+            } catch (IOException e) {
+                return -1l;
             }
         }
     }
