@@ -2,7 +2,47 @@
 <resources>
 
     <string name="app_name">SkiTrack_SCRUM</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="title_recordTrack">Record new Track</string>
     <string name="action_settings">Settings</string>
+    <string name="lbl_Username">Username (enter test)</string>
+    <string name="lbl_Password">Password (enter test)</string>
+    <string name="btn_Login">Login</string>
+    <string name="drawer_open">Open Menu</string>
+    <string name="drawer_close">Close Menu</string>
+    <string name="start">Start Recording</string>
+    <string name="stop">Stop Recording</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
+    <string name="altitude">Altitude</string>
+    <string name="satellites"># Satellites</string>
+    <string name="accuracy">Accuracy</string>
+    <string name="noGps">No GPS Enabled</string>
+    <string name="enableGps">Do you want to enable GPS ?</string>
+
+    <string-array name="nav_drawer_items">
+        <item>New Track</item>
+        <item>History</item>
+        <item>Settings</item>
+        <item>Logout</item>
+    </string-array>
+
+    <array name="nav_drawer_icons">
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+        <item>@drawable/ic_launcher</item>
+    </array>
+
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="title_activity_record_track">Record Track</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>

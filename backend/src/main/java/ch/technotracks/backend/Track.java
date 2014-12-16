@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Evelyn on 12.12.2014.
  */
 @Entity
-public class Track{
+public class Track implements Serializable{
     @Id
     private Long id;
     private String name;
