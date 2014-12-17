@@ -13,7 +13,7 @@ import java.util.Date;
  * Created by Evelyn on 12.12.2014.
  */
 @Entity
-public class GPSData {
+public class GPSData implements Serializable{
     @Id
     private Long id;
     private double longitude;

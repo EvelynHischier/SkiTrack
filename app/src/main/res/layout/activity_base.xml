@@ -18,6 +18,14 @@
             android:layout_height="wrap_content"
             android:text="BaseActivity"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Synchronizing"
+            android:id="@+id/button"
+            android:layout_gravity="center"
+            android:onClick="buttonSync"/>
     </FrameLayout>
 
     <!-- The navigation drawer -->

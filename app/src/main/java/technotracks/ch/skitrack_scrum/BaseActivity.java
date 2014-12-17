@@ -14,10 +14,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import java.util.ArrayList;
+import com.google.api.client.util.DateTime;
 
+import java.util.ArrayList;
+import java.util.Date;
+
+import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
+import technotracks.ch.database.DatabaseAccess;
 
 @SuppressWarnings("deprecation")
 public class BaseActivity extends Activity {
@@ -212,5 +217,19 @@ public class BaseActivity extends Activity {
             // display view for selected nav drawer item
             displayView(position);
         }
+    }
+
+    public void buttonSync(View view){
+
+//        Track track = new Track();
+//
+//        track.setName("local track");
+//        track.setSync(false);
+//        track.setCreate(new DateTime(new Date()));
+//
+//        DatabaseAccess.openConnection(this);
+//        track.setId(DatabaseAccess.writeTrack(track));
+
+
     }
 }

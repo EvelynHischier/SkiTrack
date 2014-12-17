@@ -34,6 +34,7 @@ public class DatabaseAccess {
 
     // Track
     public static long writeTrack(Track track) {
+
         ContentValues values = new ContentValues();
 
         values.put(SQLHelper.TRACK_CREATE, track.getCreate().toString());
@@ -45,4 +46,5 @@ public class DatabaseAccess {
 
         return database.insert(SQLHelper.TABLE_NAME_TRACK, null, values);
     }
+
 }
