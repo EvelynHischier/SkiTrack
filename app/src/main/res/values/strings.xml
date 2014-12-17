@@ -44,5 +44,7 @@
     <string name="action_example">Example action</string>
     <string name="title_activity_record_track">Record Track</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_show_map">ShowMapActivity</string>
+    <string name="title_activity_track_history">Track History</string>
 
 </resources>

@@ -10,8 +10,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-//import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
@@ -48,9 +46,8 @@ public class RecordTrackActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mUpdatesRequested = savedInstanceState.getBoolean(STATE_RECORDING);
-            // TODO kein plan
-            //currentTrack = (Track) savedInstanceState
-            //        .getSerializable(STATE_CURRENT_TRACK);
+            // TODO
+            //currentTrack = (Track) savedInstanceState.getSerializable(STATE_CURRENT_TRACK);
 
             points = (ArrayList<GPSData>) savedInstanceState
                     .getSerializable(STATE_POINTS);
@@ -62,6 +59,7 @@ public class RecordTrackActivity extends BaseActivity implements
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_track);
+
         String[] navMenuTitles = getResources().getStringArray(
                 R.array.nav_drawer_items);
 
@@ -69,6 +67,13 @@ public class RecordTrackActivity extends BaseActivity implements
                 R.array.nav_drawer_icons); // load icons from strings.xml
 
         set(navMenuTitles, navMenuIcons);
+
+        mLocationClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
         mLocationRequest = LocationRequest.create();
         // Use high accuracy
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -80,18 +85,14 @@ public class RecordTrackActivity extends BaseActivity implements
 		 * Create a new location client, using the enclosing class to handle
 		 * callbacks.
 		 */
-        mLocationClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_RECORDING, mUpdatesRequested);
-        // COMMEEEENNNNNNNT
-        // //outState.putSerializable(STATE_CURRENT_TRACK, currentTrack);
+        // TODO COMMEEEENNNNNNNT
+        // outState.putSerializable(STATE_CURRENT_TRACK, currentTrack);
         outState.putSerializable(STATE_POINTS, (Serializable) points);
         super.onSaveInstanceState(outState);
     }
@@ -133,6 +134,7 @@ public class RecordTrackActivity extends BaseActivity implements
 			 * the listener, so the argument is "this".
 			 */
             // mLocationClient.removeLocationUpdates(this);
+            LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
             mLocationClient.disconnect();
         }
 
@@ -150,10 +152,6 @@ public class RecordTrackActivity extends BaseActivity implements
 
         // Connect the client.
         mLocationClient.connect();
-
-        if (mLocationClient.isConnected()) {
-
-        }
 
     }
 
@@ -264,6 +262,7 @@ public class RecordTrackActivity extends BaseActivity implements
             if (points == null)
                 points = new ArrayList<GPSData>();
             // TODO kaplan alda
+            LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient,mLocationRequest,this);
             //mLocationClient.requestLocationUpdates(mLocationRequest, this);
         }
 
@@ -273,13 +272,5 @@ public class RecordTrackActivity extends BaseActivity implements
     public void onConnectionSuspended(int i) {
         // TODO yolo
     }
-
-//    @Override
-    // TODO Kein plan
-//    public void onDisconnected() {
-//        // Display the connection status
-//        Toast.makeText(this, "Disconnected. Please re-connect.",
-//                Toast.LENGTH_SHORT).show();
-//    }
 
 }

@@ -149,6 +149,7 @@
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </TableRow>
         </TableLayout>
+
     </FrameLayout>
 
     <!-- The navigation drawer -->

@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -45,6 +47,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".skitrack_scrum.BaseActivity" />
+        </activity>
+        <activity
+            android:name=".skitrack_scrum.ShowMapActivity"
+            android:label="@string/title_activity_show_map" >
+        </activity>
+        <activity
+            android:name=".skitrack_scrum.TrackHistoryActivity"
+            android:label="@string/title_activity_track_history" >
         </activity>
     </application>
 

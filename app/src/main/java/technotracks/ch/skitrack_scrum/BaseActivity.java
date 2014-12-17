@@ -14,15 +14,11 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.google.api.client.util.DateTime;
-
 import java.util.ArrayList;
-import java.util.Date;
 
-import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
-import technotracks.ch.database.DatabaseAccess;
+
 
 @SuppressWarnings("deprecation")
 public class BaseActivity extends Activity {
@@ -45,6 +41,8 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        System.out.println("Base created");
 
         String[] navMenuTitles = getResources().getStringArray(
                 R.array.nav_drawer_items);
@@ -87,13 +85,9 @@ public class BaseActivity extends Activity {
         mDrawerList.setAdapter(adapter);
 
         // enabling action bar app icon and behaving it as toggle button
-    try {
+
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-    }
-    catch (Exception e){
-
-    }
 
          //getSupportActionBar().setIcon(R.drawable.ic_drawer);
 
@@ -161,7 +155,7 @@ public class BaseActivity extends Activity {
                 intent = new Intent(this, RecordTrackActivity.class);
                 break;
             case 1:
-                // Intent intent1 = new Intent(this, Second.class);
+                intent = new Intent(this, TrackHistoryActivity.class);
                 break;
             case 2:
                 intent = new Intent(this, AndroidDatabaseManager.class);
@@ -176,14 +170,15 @@ public class BaseActivity extends Activity {
         }
 
         // update selected item and title, then close the drawer
+        updateAndCloseDrawer(position);
+        startActivity(intent);
+    }
+
+    public void updateAndCloseDrawer(int position){
         mDrawerList.setItemChecked(position, true);
         mDrawerList.setSelection(position);
         mDrawerLayout.closeDrawer(mDrawerList);
-        System.out.println("starting new Activity");
-        startActivity(intent);
-        finish();
     }
-
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
