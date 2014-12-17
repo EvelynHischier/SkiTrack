@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,9 +16,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import ch.technotracks.backend.trackApi.model.Track;
+import ch.technotracks.backend.userApi.model.User;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
+import technotracks.ch.database.DatabaseAccess;
+import technotracks.ch.database.SQLHelper;
+import technotracks.ch.database.Synchronize;
 
 
 @SuppressWarnings("deprecation")
@@ -41,8 +48,6 @@ public class BaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-
-        System.out.println("Base created");
 
         String[] navMenuTitles = getResources().getStringArray(
                 R.array.nav_drawer_items);
@@ -85,9 +90,13 @@ public class BaseActivity extends Activity {
         mDrawerList.setAdapter(adapter);
 
         // enabling action bar app icon and behaving it as toggle button
-
+    try {
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
+    }
+    catch (Exception e){
+
+    }
 
          //getSupportActionBar().setIcon(R.drawable.ic_drawer);
 
@@ -225,6 +234,17 @@ public class BaseActivity extends Activity {
 //        DatabaseAccess.openConnection(this);
 //        track.setId(DatabaseAccess.writeTrack(track));
 
+        Synchronize sync = new Synchronize();
 
+        List<User> users  =  DatabaseAccess.readUser(this);
+//
+//
+////        sync.new SyncTrack(this, tracks).execute();
+//
+//        for (Track track: tracks)
+//        DatabaseAccess.updateToSynced(this, track.getIdLocal(), SQLHelper.TABLE_NAME_TRACK);
+//
+        Log.i("size ", users.size()+"");
+        Log.i("User", users.get(0).getFirstname()+" : "+users.get(0).getPassword());
     }
 }

@@ -15,11 +15,18 @@ import java.util.List;
 
 import ch.technotracks.backend.trackApi.TrackApi;
 import ch.technotracks.backend.trackApi.model.Track;
+import ch.technotracks.backend.userApi.UserApi;
+import ch.technotracks.backend.userApi.model.User;
 
 /**
  * Created by Evelyn on 12.12.2014.
  */
 public class Synchronize {
+
+    public  void synchronizeAll(){
+        //TODO synchronizeAll --> für alle
+    }
+
 
     public class SyncTrack extends AsyncTask<Void, Void, Long>{
         private Context context;
@@ -52,6 +59,47 @@ public class Synchronize {
                 // insert into app engine
                 for(Track track : tracks) {
                     myService.insert(track).execute();
+                }
+                return 1l;
+
+                //get
+                //return myService.list().execute().getItems();
+            } catch (IOException e) {
+                return -1l;
+            }
+        }
+    }
+
+    public class SyncUser extends AsyncTask<Void, Void, Long>{
+        private Context context;
+        private UserApi myService = null;
+        private List<User> users;
+
+        public SyncUser(Context context, List<User> users){
+            this.context = context;
+            this.users = users;
+        }
+
+        @Override
+        protected Long doInBackground(Void... params) {
+
+            // singleton
+            if (myService == null){
+                UserApi.Builder builder = new UserApi.Builder(AndroidHttp.newCompatibleTransport(),
+                        new AndroidJsonFactory(), null)
+                        .setRootUrl("https://skilful-union-792.appspot.com/_ah/api/")
+                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer(){
+                            @Override
+                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                abstractGoogleClientRequest.setDisableGZipContent(true);}
+                        });
+                myService = builder.build();
+            }
+
+            try {
+                // insert into app engine
+                for(User user : users) {
+                    myService.insert(user).execute();
                 }
                 return 1l;
 

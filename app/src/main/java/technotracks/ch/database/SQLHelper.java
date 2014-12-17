@@ -29,6 +29,8 @@ public class SQLHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME_TRACK_USER = "Track_User";
     public static final String TABLE_NAME_CHAMPIONSHIP_USER = "Championship_User";
 
+    public static final String SYNC = "synchronized";
+
     // Title of Columns of GPSData
     public static final String GPSDATA_ID = "id_gpsdata";
     public static final String GPSDATA_LONGITUDE = "longitude";
@@ -49,7 +51,6 @@ public class SQLHelper extends SQLiteOpenHelper {
     public static final String TRACK_ID = "id_track";
     public static final String TRACK_NAME = "name";
     public static final String TRACK_CREATE = "create_date";
-    public static final String TRACK_SYNC = "synchronized";
 
     // Title of Columns of user
     public static final String USER_ID = "id_user";
@@ -120,7 +121,7 @@ public class SQLHelper extends SQLiteOpenHelper {
             + TRACK_ID + " INTEGER PRIMARY KEY,"
             + TRACK_NAME + " TEXT, "
             + TRACK_CREATE + " DATE, "
-            + TRACK_SYNC + " BOOLEAN, "
+            + SYNC + " BOOLEAN, "
             + VEHICLE_ID + " INTEGER, "
             + " FOREIGN KEY(" + VEHICLE_ID + ") REFERENCES " + TABLE_NAME_VEHICLE + " (" + VEHICLE_ID + ")"
             + ")";
@@ -132,9 +133,10 @@ public class SQLHelper extends SQLiteOpenHelper {
             + USER_ID + " INTEGER PRIMARY KEY,"
             + USER_FIRSTNAME + " TEXT, "
             + USER_LASTNAME + " TEXT, "
-            + USER_PASSWORD + " TEXT,"
-            + USER_EMAIL + " TEXT,"
-            + USER_PHONENUMBER + " TEXT,"
+            + USER_PASSWORD + " TEXT, "
+            + USER_EMAIL + " TEXT, "
+            + USER_PHONENUMBER + " TEXT, "
+            + SYNC + " BOOLEAN DEFAULT 0, "
             + USER_TAKE_PART_CHAMPIONSHIP + " BOOLEAN" +
             ")";
 

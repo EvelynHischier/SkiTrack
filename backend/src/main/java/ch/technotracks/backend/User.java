@@ -29,8 +29,8 @@ public class User{
      * 					Constructors
      **************************************************************/
     public User(){
-        tracks = new ArrayList<Ref<Track>>();
-        championships = new ArrayList<Ref<Championship>>();
+        tracks = new ArrayList<Track>();
+        championships = new ArrayList<Championship>();
     }
     public User(String firstname, String lastname, String password, String eMail, String phoneNumber, boolean championship) {
         this.firstname = firstname;
@@ -40,29 +40,27 @@ public class User{
         this.phoneNumber = phoneNumber;
         this.takePartChampionship = championship;
 
-        tracks = new ArrayList<Ref<Track>>();
-        championships = new ArrayList<Ref<Championship>>();
+        tracks = new ArrayList<Track>();
+        championships = new ArrayList<Championship>();
     }
 	/* ************************************************************
 	 * 					Relations
 	 **************************************************************/
-    private List<Ref<Track>> tracks;
-    private List<Ref<Championship>> championships;
+    private List<Track> tracks;
+    private List<Championship> championships;
 
     /* ************************************************************
      * 					Helper methods
      **************************************************************/
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void addTrack(Ref<Track> track){
+    public void addTrack(Track track){
         tracks.add(track);
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void removeTrack(Track track){
         tracks.remove(track);
     }
 
-    public void addChampionship(Ref<Championship> championship){
+    public void addChampionship(Championship championship){
         championships.add(championship);
     }
     public void removeChampionship(Championship championship){
@@ -124,38 +122,29 @@ public class User{
         return takePartChampionship;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void setChampionship(boolean championship) {
         this.takePartChampionship = championship;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public boolean isTakePartChampionship() {
         return takePartChampionship;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void setTakePartChampionship(boolean takePartChampionship) {
         this.takePartChampionship = takePartChampionship;
     }
-
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Ref<Track>> getTracks() {
+    public List<Track> getTracks() {
         return tracks;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setTracks(List<Ref<Track>> tracks) {
+    public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Ref<Championship>> getChampionships() {
+    public List<Championship> getChampionships() {
         return championships;
     }
-
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setChampionships(List<Ref<Championship>> championships) {
+    public void setChampionships(List<Championship> championships) {
         this.championships = championships;
     }
 }
