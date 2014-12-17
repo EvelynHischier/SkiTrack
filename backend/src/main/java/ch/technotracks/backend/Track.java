@@ -19,6 +19,7 @@ import java.util.List;
 public class Track implements Serializable{
     @Id
     private Long id;
+    private Long idLocal;
     private String name;
     private Date create;
     private boolean sync;
@@ -27,7 +28,7 @@ public class Track implements Serializable{
      * 					Constructors
      **************************************************************/
     public Track(){
-        gps = new ArrayList<Key<GPSData>>();
+        gps = new ArrayList<GPSData>();
         sync = false;
     }
 
@@ -35,23 +36,23 @@ public class Track implements Serializable{
         this.name = name;
         this.create = create;
 
-        gps = new ArrayList<Key<GPSData>>();
+        gps = new ArrayList<GPSData>();
         sync = false;
     }
     /* ************************************************************
      * 					Relations
      **************************************************************/
-    private Key<User> user;
+    private User user;
 
-    private List<Key<GPSData>> gps;
+    private List<GPSData> gps;
 
-    private Key<Vehicle> vehicle;
+    private Vehicle vehicle;
 
 	/* ************************************************************
 	 * 					Helper methods
 	 **************************************************************/
     //@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void addGPSData(Key<GPSData> gpsdata){
+    public void addGPSData(GPSData gpsdata){
         gps.add(gpsdata);
     }
    // @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
@@ -59,9 +60,16 @@ public class Track implements Serializable{
         gps.remove(gpsData);
     }
 
+
     /* ************************************************************
-     * 					Getters & Setters
-     **************************************************************/
+         * 					Getters & Setters
+         **************************************************************/
+    public Long getIdLocal() {
+        return idLocal;
+    }
+    public void setIdLocal(Long idLocal) {
+        this.idLocal = idLocal;
+    }
     public long getId() {
         return id;
     }
@@ -89,33 +97,27 @@ public class Track implements Serializable{
         this.sync = sync;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Key<User> getUser() {
+    public User getUser() {
         return user;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setUser(Key<User> user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Key<GPSData>> getGps() {
+    public List<GPSData> getGps() {
         return gps;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setGps(List<Key<GPSData>> gps) {
+    public void setGps(List<GPSData> gps) {
         this.gps = gps;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Key<Vehicle> getVehicle() {
+    public Vehicle getVehicle() {
         return vehicle;
     }
 
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setVehicle(Key<Vehicle> vehicle) {
+    public void setVehicle(Vehicle vehicle) {
         this.vehicle = vehicle;
     }
 }

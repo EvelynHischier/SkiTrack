@@ -27,7 +27,7 @@ import ch.technotracks.backend.gPSDataApi.model.GPSData;
 import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
 import technotracks.ch.constant.Constant;
-import technotracks.ch.database.DatabaseAccessObject;
+import technotracks.ch.database.DatabaseAccess;
 
 public class RecordTrackActivity extends BaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -188,7 +188,7 @@ public class RecordTrackActivity extends BaseActivity implements
 //		point.setTrack(this.currentTrack);
         points.add(point);
         update(point); // update the display
-        DatabaseAccessObject.writeGPSData(point);
+        DatabaseAccess.writeGPSData(point);
     }
 
     private void update(GPSData point) {
@@ -253,11 +253,11 @@ public class RecordTrackActivity extends BaseActivity implements
 
         if (mUpdatesRequested) {
             if (currentTrack == null) {
-                DatabaseAccessObject.open(this);
+                DatabaseAccess.openConnection(this);
                 currentTrack = new Track();
                 currentTrack.setName("testTrack");
                 currentTrack.setCreate(new DateTime(new Date()));
-                currentTrack.setId(DatabaseAccessObject
+                currentTrack.setId(DatabaseAccess
                         .writeTrack(currentTrack));
             }
 

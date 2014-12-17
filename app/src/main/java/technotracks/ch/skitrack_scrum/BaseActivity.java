@@ -7,6 +7,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,11 +19,13 @@ import com.google.api.client.util.DateTime;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
 import technotracks.ch.database.DatabaseAccess;
+import technotracks.ch.database.Synchronize;
 
 @SuppressWarnings("deprecation")
 public class BaseActivity extends Activity {
@@ -221,6 +224,7 @@ public class BaseActivity extends Activity {
 
     public void buttonSync(View view){
 
+
 //        Track track = new Track();
 //
 //        track.setName("local track");
@@ -230,6 +234,14 @@ public class BaseActivity extends Activity {
 //        DatabaseAccess.openConnection(this);
 //        track.setId(DatabaseAccess.writeTrack(track));
 
+        Synchronize sync = new Synchronize();
 
+        DatabaseAccess.openConnection(this);
+        List<Track> tracks  =  DatabaseAccess.readTrack();
+
+        sync.new SyncTrack(this, tracks).execute();
+
+        Log.i("size ", tracks.size()+"");
+        Log.i("Track", tracks.get(0).getName()+" : "+tracks.get(0).getIdLocal());
     }
 }
