@@ -78,15 +78,15 @@ public class SQLHelper extends SQLiteOpenHelper {
     // Championship_user
     public static final String TABLE_CREATE_CHAMPIONSHIP_USER = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_CHAMPIONSHIP_USER + "("
-            + CHAMPIONSHIP_USER_IDCHAMPIONSHIP + " LONG NOT NULL,"
-            + CHAMPIONSHIP_USER_IDUSER + " LONG NOT NULL "
+            + CHAMPIONSHIP_USER_IDCHAMPIONSHIP + " INTEGER NOT NULL,"
+            + CHAMPIONSHIP_USER_IDUSER + " INTEGER NOT NULL "
             + ")";
 
     // track_user
     public static final String TABLE_CREATE_TRACK_USER = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_TRACK_USER + "("
-            + TRACK_USER_IDTRACK + " LONG NOT NULL,"
-            + TRACK_USER_IDUSER + " LONG NOT NULL, "
+            + TRACK_USER_IDTRACK + " INTEGER NOT NULL,"
+            + TRACK_USER_IDUSER + " INTEGER NOT NULL, "
             + " FOREIGN KEY(" + TRACK_USER_IDTRACK + ") REFERENCES " + TABLE_NAME_TRACK + " (" + TRACK_ID + "), "
             + " FOREIGN KEY(" + TRACK_USER_IDUSER + ") REFERENCES " + TABLE_NAME_USER + " (" + USER_ID + ")"
             + ")";
@@ -94,7 +94,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     // gps
     public static final String TABLE_CREATE_GPS = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_GPSDATA + "(" +
-            GPSDATA_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            GPSDATA_ID + " INTEGER PRIMARY KEY," +
             GPSDATA_LONGITUDE + " DOUBLE, " +
             GPSDATA_LATITUDE + " DOUBLE, " +
             GPSDATA_ALTITUDE + " DOUBLE, " +
@@ -103,14 +103,14 @@ public class SQLHelper extends SQLiteOpenHelper {
             GPSDATA_TIMESTAMP + " DATE, " +
             GPSDATA_SPEED + " FLOAT, " +
             GPSDATA_BEARING + " FLOAT, " +
-            TRACK_ID + " LONG, " +
+            TRACK_ID + " INTEGER, " +
             " FOREIGN KEY(" + TRACK_ID + ") REFERENCES " + TABLE_NAME_TRACK + " (" + TRACK_ID + ")"
             + ")";
 
     // championship
     public static final String TABLE_CREATE_CHAMPIONSHIP = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_CHAMPIONSHIP + "("
-            + CHAMPIONSHIP_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + CHAMPIONSHIP_ID + " INTEGER PRIMARY KEY,"
             + CHAMPIONSHIP_START + " DATE, "
             + CHAMPIONSHIP_END + " DATE)";
 
@@ -120,13 +120,16 @@ public class SQLHelper extends SQLiteOpenHelper {
             + TRACK_ID + " INTEGER PRIMARY KEY,"
             + TRACK_NAME + " TEXT, "
             + TRACK_CREATE + " DATE, "
-            + TRACK_SYNC + " BOOLEAN)";
+            + TRACK_SYNC + " BOOLEAN, "
+            + VEHICLE_ID + " INTEGER, "
+            + " FOREIGN KEY(" + VEHICLE_ID + ") REFERENCES " + TABLE_NAME_VEHICLE + " (" + VEHICLE_ID + ")"
+            + ")";
 
     // user
     public static final String TABLE_CREATE_USER = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_USER
             + "("
-            + USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + USER_ID + " INTEGER PRIMARY KEY,"
             + USER_FIRSTNAME + " TEXT, "
             + USER_LASTNAME + " TEXT, "
             + USER_PASSWORD + " TEXT,"
@@ -135,6 +138,7 @@ public class SQLHelper extends SQLiteOpenHelper {
             + USER_TAKE_PART_CHAMPIONSHIP + " BOOLEAN" +
             ")";
 
+    // vehicle
     public static final String TABLE_CREATE_VEHICLE = "CREATE TABLE IF NOT EXISTS "
             + TABLE_NAME_VEHICLE
             + "("

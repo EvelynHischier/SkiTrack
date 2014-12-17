@@ -27,7 +27,7 @@ public class Track implements Serializable{
      * 					Constructors
      **************************************************************/
     public Track(){
-        gps = new ArrayList<Ref<GPSData>>();
+        gps = new ArrayList<Key<GPSData>>();
         sync = false;
     }
 
@@ -35,24 +35,26 @@ public class Track implements Serializable{
         this.name = name;
         this.create = create;
 
-        gps = new ArrayList<Ref<GPSData>>();
+        gps = new ArrayList<Key<GPSData>>();
         sync = false;
     }
     /* ************************************************************
      * 					Relations
      **************************************************************/
-    private Ref<User> user;
+    private Key<User> user;
 
-    private List<Ref<GPSData>> gps;
+    private List<Key<GPSData>> gps;
+
+    private Key<Vehicle> vehicle;
 
 	/* ************************************************************
 	 * 					Helper methods
 	 **************************************************************/
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void addGPSData(Ref<GPSData> gpsdata){
+    //@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public void addGPSData(Key<GPSData> gpsdata){
         gps.add(gpsdata);
     }
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+   // @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void removeGPSData(GPSData gpsData){
         gps.remove(gpsData);
     }
@@ -88,58 +90,32 @@ public class Track implements Serializable{
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Ref<User> getUser() {
+    public Key<User> getUser() {
         return user;
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setUser(Ref<User> user) {
+    public void setUser(Key<User> user) {
         this.user = user;
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public List<Ref<GPSData>> getGps() {
+    public List<Key<GPSData>> getGps() {
         return gps;
     }
 
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setGps(List<Ref<GPSData>> gps) {
+    public void setGps(List<Key<GPSData>> gps) {
         this.gps = gps;
     }
 
-    /* ************************************************************
-      * 					Vehicle embedded
-     **************************************************************/
-    @Entity
-    public class Vehicle implements Serializable{
-        @Id
-        private Long id;
-        private String name;
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public Key<Vehicle> getVehicle() {
+        return vehicle;
+    }
 
-        /* ************************************************************
-         * 					Constructors
-         **************************************************************/
-        public Vehicle(){}
-
-        public Vehicle(String name) {
-            super();
-            this.name = name;
-        }
-
-        /* ************************************************************
-         * 					Helper methods
-         **************************************************************/
-        public long getId() {
-            return id;
-        }
-        public void setId(long id) {
-            this.id = id;
-        }
-        public String getName() {
-            return name;
-        }
-        public void setName(String name) {
-            this.name = name;
-        }
+    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+    public void setVehicle(Key<Vehicle> vehicle) {
+        this.vehicle = vehicle;
     }
 }

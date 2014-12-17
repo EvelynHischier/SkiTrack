@@ -16,7 +16,7 @@
             <param-value>ch.technotracks.backend.ChampionshipEndpoint,
                 ch.technotracks.backend.GPSDataEndpoint,
                 ch.technotracks.backend.TrackEndpoint,
-                ch.technotracks.backend.UserEndpoint</param-value>
+                ch.technotracks.backend.UserEndpoint, ch.technotracks.backend.VehicleEndpoint</param-value>
         </init-param>
     </servlet>
     <servlet-mapping>

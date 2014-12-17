@@ -40,6 +40,9 @@ public class DatabaseAccess {
         values.put(SQLHelper.TRACK_NAME, track.getName());
         values.put(SQLHelper.TRACK_SYNC, false);
 
+        // if vehicle is not null
+
+
         return database.insert(SQLHelper.TABLE_NAME_TRACK, null, values);
     }
 }
