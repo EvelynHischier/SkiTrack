@@ -15,16 +15,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
-import com.google.api.client.util.DateTime;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ch.technotracks.backend.trackApi.model.Track;
+import ch.technotracks.backend.userApi.model.User;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
 import technotracks.ch.database.DatabaseAccess;
+import technotracks.ch.database.SQLHelper;
 import technotracks.ch.database.Synchronize;
 
 @SuppressWarnings("deprecation")
@@ -225,23 +224,27 @@ public class BaseActivity extends Activity {
     public void buttonSync(View view){
 
 
-//        Track track = new Track();
+//        User user = new User();
 //
-//        track.setName("local track");
-//        track.setSync(false);
-//        track.setCreate(new DateTime(new Date()));
+//        user.setFirstname("Tester");
+//        user.setLastname("Testy");
+//        user.setPhoneNumber("123456789");
+//        user.setPassword("*******");
+//        user.setEMail("mail@service.com");
 //
-//        DatabaseAccess.openConnection(this);
-//        track.setId(DatabaseAccess.writeTrack(track));
+//        user.setId(DatabaseAccess.writeUser(this, user));
 
         Synchronize sync = new Synchronize();
 
-        DatabaseAccess.openConnection(this);
-        List<Track> tracks  =  DatabaseAccess.readTrack();
-
-        sync.new SyncTrack(this, tracks).execute();
-
-        Log.i("size ", tracks.size()+"");
-        Log.i("Track", tracks.get(0).getName()+" : "+tracks.get(0).getIdLocal());
+        List<User> users  =  DatabaseAccess.readUser(this);
+//
+//
+////        sync.new SyncTrack(this, tracks).execute();
+//
+//        for (Track track: tracks)
+//        DatabaseAccess.updateToSynced(this, track.getIdLocal(), SQLHelper.TABLE_NAME_TRACK);
+//
+        Log.i("size ", users.size()+"");
+        Log.i("User", users.get(0).getFirstname()+" : "+users.get(0).getPassword());
     }
 }

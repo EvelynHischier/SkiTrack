@@ -188,7 +188,7 @@ public class RecordTrackActivity extends BaseActivity implements
 //		point.setTrack(this.currentTrack);
         points.add(point);
         update(point); // update the display
-        DatabaseAccess.writeGPSData(point);
+        DatabaseAccess.writeGPSData(this, point);
     }
 
     private void update(GPSData point) {
@@ -253,12 +253,11 @@ public class RecordTrackActivity extends BaseActivity implements
 
         if (mUpdatesRequested) {
             if (currentTrack == null) {
-                DatabaseAccess.openConnection(this);
                 currentTrack = new Track();
                 currentTrack.setName("testTrack");
                 currentTrack.setCreate(new DateTime(new Date()));
                 currentTrack.setId(DatabaseAccess
-                        .writeTrack(currentTrack));
+                        .writeTrack(this, currentTrack));
             }
 
             if (points == null)

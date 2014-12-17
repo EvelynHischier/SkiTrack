@@ -61,9 +61,14 @@ public class Track implements Serializable{
     }
 
 
+    @Override
+    public String toString() {
+        return create.getYear()+"-"+create.getMonth()+"-"+create.getDay() +" : " + name;
+    }
+
     /* ************************************************************
-         * 					Getters & Setters
-         **************************************************************/
+             * 					Getters & Setters
+             **************************************************************/
     public Long getIdLocal() {
         return idLocal;
     }
