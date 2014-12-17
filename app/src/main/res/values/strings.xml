@@ -19,6 +19,27 @@
     <string name="noGps">No GPS Enabled</string>
     <string name="enableGps">Do you want to enable GPS ?</string>
 
+    <!-- main form labels -->
+    <string name="txt_latitude">Latitude:</string>
+    <string name="txt_longitude">Longitude:</string>
+    <string name="txt_altitude">Altitude:</string>
+    <string name="txt_speed">Speed:</string>
+    <string name="txt_direction">Direction:</string>
+    <string name="txt_satellites">Satellites:</string>
+    <string name="txt_accuracy">Accuracy:</string>
+    <string name="txt_travel_distance">Travelled:</string>
+    <string name="txt_travel_duration">Duration:</string>
+    <string name="btn_start_logging">Start Logging</string>
+    <string name="btn_stop_logging">Stop Logging</string>
+    <string name="summary_dist">Distance:</string>
+    <string name="txt_number_of_points">Number of points</string>
+    <string name="meters">&#160;meters</string>
+    <string name="meters_per_second">&#160;m/s</string>
+    <string name="kilometers_per_hour">&#160;km/h</string>
+    <string name="kilometers">&#160;km</string>
+    <string name="degree_symbol">&#176;</string>
+    <string name="points">points</string>
+
     <string-array name="nav_drawer_items">
         <item>New Track</item>
         <item>History</item>

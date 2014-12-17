@@ -4,8 +4,11 @@ import android.content.IntentSender;
 import android.content.res.TypedArray;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.api.client.util.DateTime;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,12 +28,14 @@ import java.util.List;
 import ch.technotracks.backend.gPSDataApi.model.GPSData;
 import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
+import technotracks.ch.common.Session;
 import technotracks.ch.constant.Constant;
 import technotracks.ch.database.DatabaseAccess;
+import technotracks.ch.skitrack_scrum.component.ToggleComponent;
 
 public class RecordTrackActivity extends BaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener,View.OnClickListener {
 
     private final String STATE_RECORDING = "Recording";
     private final String STATE_CURRENT_TRACK = "Track";
@@ -41,6 +47,8 @@ public class RecordTrackActivity extends BaseActivity implements
     private GoogleApiClient mLocationClient;
     private LocationRequest mLocationRequest;
     private boolean mUpdatesRequested;
+
+    private ToggleComponent toggleComponent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +75,30 @@ public class RecordTrackActivity extends BaseActivity implements
                 R.array.nav_drawer_icons); // load icons from strings.xml
 
         set(navMenuTitles, navMenuIcons);
+
+        setImageTooltips();
+
+        // Toggle the play and pause.
+        toggleComponent = ToggleComponent.getBuilder()
+                .addOnView(findViewById(R.id.simple_play))
+                .addOffView(findViewById(R.id.simple_stop))
+                .setDefaultState(!Session.isStarted())
+                .addHandler(new ToggleComponent.ToggleHandler() {
+                    @Override
+                    public void onStatusChange(boolean status) {
+                        if (status) {
+                            // requestStartLogging();
+                            startCapture();
+                        } else {
+                            // requestStopLogging();
+                        }
+                    }
+                })
+                .build();
+
+        if (Session.hasValidLocation()) {
+            SetLocation(Session.getCurrentLocationInfo());
+        }
 
         mLocationClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
@@ -116,9 +148,9 @@ public class RecordTrackActivity extends BaseActivity implements
     }
 
     private void setButtonLabel() {
-        Button btnStart = (Button) findViewById(R.id.btnStartStopRecording);
+        /*Button btnStart = (Button) findViewById(R.id.btnStartStopRecording);
         btnStart.setText(mUpdatesRequested ? getString(R.string.stop)
-                : getString(R.string.start));
+                : getString(R.string.start));*/
     }
 
     /**
@@ -126,7 +158,7 @@ public class RecordTrackActivity extends BaseActivity implements
      */
     private void stopCapture() {
         mUpdatesRequested = false;
-
+        Session.setStarted(false);
         // If the client is connected
         if (mLocationClient.isConnected()) {
 			/*
@@ -134,6 +166,7 @@ public class RecordTrackActivity extends BaseActivity implements
 			 * the listener, so the argument is "this".
 			 */
             // mLocationClient.removeLocationUpdates(this);
+            Session.setCurrentLocationInfo(null);
             LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
             mLocationClient.disconnect();
         }
@@ -149,10 +182,13 @@ public class RecordTrackActivity extends BaseActivity implements
      */
     private void startCapture() {
         mUpdatesRequested = true;
+        if (Session.isStarted())
+            return;
 
         // Connect the client.
-        mLocationClient.connect();
 
+        mLocationClient.connect();
+        Session.setStarted(true);
     }
 
     public int getSatelliteNumber() {
@@ -185,14 +221,15 @@ public class RecordTrackActivity extends BaseActivity implements
         point.setBearing(location.getBearing());
 //		point.setTrack(this.currentTrack);
         points.add(point);
-        update(point); // update the display
+        SetLocation(location);
+        //update(point); // update the display
         DatabaseAccess.writeGPSData(this, point);
     }
 
     private void update(GPSData point) {
         try {
 
-            TextView txtLatitude = (TextView) findViewById(R.id.latitude);
+           /* TextView txtLatitude = (TextView) findViewById(R.id.latitude);
             txtLatitude.setText(Double.toString(point.getLatitude()));
             TextView txtLongitude = (TextView) findViewById(R.id.longitude);
             txtLongitude.setText(Double.toString(point.getLongitude()));
@@ -202,7 +239,7 @@ public class RecordTrackActivity extends BaseActivity implements
             txtAccuracy.setText(Double.toString(point.getAccuracy()));
 
             TextView txtSatellites = (TextView) findViewById(R.id.satellites);
-            txtSatellites.setText(Integer.toString(0));
+            txtSatellites.setText(Integer.toString(0));*/
         } catch (Exception e) {
             Toast.makeText(getApplicationContext(), e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -260,9 +297,8 @@ public class RecordTrackActivity extends BaseActivity implements
 
             if (points == null)
                 points = new ArrayList<GPSData>();
-            // TODO kaplan alda
+
             LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient,mLocationRequest,this);
-            //mLocationClient.requestLocationUpdates(mLocationRequest, this);
         }
 
     }
@@ -272,4 +308,194 @@ public class RecordTrackActivity extends BaseActivity implements
         // TODO yolo
     }
 
+    public void SetLocation(Location locationInfo) {
+
+
+        NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(6);
+
+        EditText txtLatitude = (EditText) findViewById(R.id.simple_lat_text);
+        txtLatitude.setText(String.valueOf(nf.format(locationInfo.getLatitude())));
+
+        EditText txtLongitude = (EditText) findViewById(R.id.simple_lon_text);
+        txtLongitude.setText(String.valueOf(nf.format(locationInfo.getLongitude())));
+
+        nf.setMaximumFractionDigits(3);
+
+        if (locationInfo.hasAccuracy()) {
+
+            TextView txtAccuracy = (TextView) findViewById(R.id.simpleview_txtAccuracy);
+            float accuracy = locationInfo.getAccuracy();
+
+            txtAccuracy.setText(nf.format(accuracy) + getString(R.string.meters));
+
+            if (accuracy > 500) {
+                txtAccuracy.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+            }
+
+            if (accuracy > 900) {
+                txtAccuracy.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            } else {
+                txtAccuracy.setTextColor(getResources().getColor(android.R.color.black));
+            }
+
+        }
+
+        if (locationInfo.hasAltitude()) {
+
+            TextView txtAltitude = (TextView) findViewById(R.id.simpleview_txtAltitude);
+            txtAltitude.setText(nf.format(locationInfo.getAltitude()) + getString(R.string.meters));
+
+        }
+
+        if (locationInfo.hasSpeed()) {
+
+            float speed = locationInfo.getSpeed();
+            String unit;
+
+            if (speed > 0.277) {
+                speed = speed * 3.6f;
+                unit = getString(R.string.kilometers_per_hour);
+            } else {
+                unit = getString(R.string.meters_per_second);
+            }
+
+            TextView txtSpeed = (TextView) findViewById(R.id.simpleview_txtSpeed);
+            txtSpeed.setText(String.valueOf(nf.format(speed)) + unit);
+
+        }
+
+        if (locationInfo.hasBearing()) {
+
+            ImageView imgDirection = (ImageView) findViewById(R.id.simpleview_imgDirection);
+            imgDirection.setRotation(locationInfo.getBearing());
+
+            TextView txtDirection = (TextView) findViewById(R.id.simpleview_txtDirection);
+            txtDirection.setText(String.valueOf(Math.round(locationInfo.getBearing())) + getString(R.string.degree_symbol));
+
+        }
+
+        TextView txtDuration = (TextView) findViewById(R.id.simpleview_txtDuration);
+
+        long startTime = Session.getStartTimeStamp();
+        long currentTime = System.currentTimeMillis();
+        String duration = getInterval(startTime, currentTime);
+
+        txtDuration.setText(duration);
+
+
+        String distanceUnit;
+
+        double distanceValue = Session.getTotalTravelled();
+        distanceUnit = getString(R.string.meters);
+        if (distanceValue > 1000) {
+            distanceUnit = getString(R.string.kilometers);
+            distanceValue = distanceValue / 1000;
+        }
+
+        TextView txtPoints = (TextView) findViewById(R.id.simpleview_txtPoints);
+        TextView txtTravelled = (TextView) findViewById(R.id.simpleview_txtDistance);
+
+        nf.setMaximumFractionDigits(1);
+        txtTravelled.setText(nf.format(distanceValue) + " " + distanceUnit);
+        txtPoints.setText(Session.getNumLegs() + " " + getString(R.string.points));
+
+        String providerName = locationInfo.getProvider();
+        if (!providerName.equalsIgnoreCase("gps")) {
+            TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
+            txtSatelliteCount.setText("-");
+        }
+
+    }
+
+    private void setImageTooltips() {
+        ImageView imgSatellites = (ImageView) findViewById(R.id.simpleview_imgSatelliteCount);
+        imgSatellites.setOnClickListener(this);
+
+        TextView txtAccuracyIcon = (TextView) findViewById(R.id.simpleview_txtAccuracyIcon);
+        txtAccuracyIcon.setOnClickListener(this);
+
+        ImageView imgElevation = (ImageView) findViewById(R.id.simpleview_imgAltitude);
+        imgElevation.setOnClickListener(this);
+
+        ImageView imgBearing = (ImageView) findViewById(R.id.simpleview_imgDirection);
+        imgBearing.setOnClickListener(this);
+
+        ImageView imgDuration = (ImageView) findViewById(R.id.simpleview_imgDuration);
+        imgDuration.setOnClickListener(this);
+
+        ImageView imgSpeed = (ImageView) findViewById(R.id.simpleview_imgSpeed);
+        imgSpeed.setOnClickListener(this);
+
+        ImageView imgDistance = (ImageView) findViewById(R.id.simpleview_distance);
+        imgDistance.setOnClickListener(this);
+
+        ImageView imgPoints = (ImageView) findViewById(R.id.simpleview_points);
+        imgPoints.setOnClickListener(this);
+
+    }
+
+    private String getInterval(long startTime, long endTime) {
+        StringBuffer sb = new StringBuffer();
+        long diff = endTime - startTime;
+        long diffSeconds = diff / 1000 % 60;
+        long diffMinutes = diff / (60 * 1000) % 60;
+        long diffHours = diff / (60 * 60 * 1000) % 24;
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+        if (diffDays > 0) {
+            sb.append(diffDays + " days ");
+        }
+        if (diffHours > 0) {
+            sb.append(String.format("%02d", diffHours) + ":");
+        }
+        sb.append(String.format("%02d", diffMinutes) + ":");
+        sb.append(String.format("%02d", diffSeconds));
+        return sb.toString();
+    }
+
+    @Override
+    public void onClick(View view) {
+        Toast toast = null;
+        switch (view.getId()) {
+            case R.id.simpleview_imgSatelliteCount:
+                toast = Toast.makeText(this, R.string.txt_satellites, Toast.LENGTH_SHORT);
+                break;
+            case R.id.simpleview_txtAccuracyIcon:
+                toast = Toast.makeText(this, R.string.txt_accuracy, Toast.LENGTH_SHORT);
+                break;
+
+            case R.id.simpleview_imgAltitude:
+                toast = Toast.makeText(this, R.string.txt_altitude, Toast.LENGTH_SHORT);
+                break;
+
+            case R.id.simpleview_imgDirection:
+                toast = Toast.makeText(this, R.string.txt_direction, Toast.LENGTH_SHORT);
+                break;
+
+            case R.id.simpleview_imgDuration:
+                toast = Toast.makeText(this, R.string.txt_travel_duration, Toast.LENGTH_SHORT);
+                break;
+
+            case R.id.simpleview_imgSpeed:
+                toast = Toast.makeText(this, R.string.txt_speed, Toast.LENGTH_SHORT);
+                break;
+
+            case R.id.simpleview_distance:
+                toast = Toast.makeText(this, R.string.txt_travel_distance, Toast.LENGTH_SHORT);
+                break;
+
+            case R.id.simpleview_points:
+                toast = Toast.makeText(this, R.string.txt_number_of_points, Toast.LENGTH_SHORT);
+                break;
+        }
+
+        int location[] = new int[2];
+        view.getLocationOnScreen(location);
+
+        if (toast != null) {
+            toast.setGravity(Gravity.TOP | Gravity.LEFT, location[0], location[1]);
+            toast.show();
+        }
+
+    }
 }
