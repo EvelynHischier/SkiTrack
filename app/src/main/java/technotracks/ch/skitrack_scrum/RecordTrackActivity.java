@@ -4,6 +4,7 @@ import android.content.IntentSender;
 import android.content.res.TypedArray;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -219,7 +220,10 @@ public class RecordTrackActivity extends BaseActivity implements
         point.setTimestamp(new DateTime(location.getTime()));
         point.setSpeed(location.getSpeed());
         point.setBearing(location.getBearing());
-//		point.setTrack(this.currentTrack);
+
+        // if the track is not stored yet (asynchronus)
+        // use -> getIdTrack
+        point.setTrackID(currentTrack.getId() == null ? DatabaseAccess.getIdTrack(): this.currentTrack.getId());
         points.add(point);
         SetLocation(location);
         //update(point); // update the display

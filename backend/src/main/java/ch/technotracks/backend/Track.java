@@ -51,20 +51,14 @@ public class Track implements Serializable{
 	/* ************************************************************
 	 * 					Helper methods
 	 **************************************************************/
-    //@ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
+
     public void addGPSData(GPSData gpsdata){
         gps.add(gpsdata);
     }
-   // @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void removeGPSData(GPSData gpsData){
         gps.remove(gpsData);
     }
 
-
-    @Override
-    public String toString() {
-        return create.getYear()+"-"+create.getMonth()+"-"+create.getDay() +" : " + name;
-    }
 
     /* ************************************************************
              * 					Getters & Setters

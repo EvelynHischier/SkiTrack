@@ -25,6 +25,8 @@ public class GPSData implements Serializable{
     private int satellites;
     private Date timestamp;
 
+    private long trackID;
+
 	/* ************************************************************
 	 * 					Constructors
 	 **************************************************************/
@@ -35,7 +37,7 @@ public class GPSData implements Serializable{
 
     public GPSData(double longitude, double latitude, double altitude,
                    float accuracy, float speed, float bearing, int satellites,
-                   Date timestamp, Ref<Track> track) {
+                   Date timestamp, long trackID) {
 
         this.longitude = longitude;
         this.latitude = latitude;
@@ -45,13 +47,8 @@ public class GPSData implements Serializable{
         this.bearing = bearing;
         this.satellites = satellites;
         this.timestamp = timestamp;
-        this.track = track;
+        this.trackID = trackID;
     }
-
-    /* ************************************************************
-     * 					Relations
-     **************************************************************/
-    private Ref<Track> track;
 
     /* ************************************************************
      * 					Getters & Setters
@@ -98,14 +95,6 @@ public class GPSData implements Serializable{
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public Ref<Track> getTrack() {
-        return track;
-    }
-    @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
-    public void setTrack(Ref<Track> track) {
-        this.track = track;
-    }
 
     public float getSpeed() {
         return speed;
@@ -123,4 +112,11 @@ public class GPSData implements Serializable{
         this.bearing = bearing;
     }
 
+    public long getTrackID() {
+        return trackID;
+    }
+
+    public void setTrackID(long trackID) {
+        this.trackID = trackID;
+    }
 }
