@@ -29,8 +29,8 @@ public class User{
      * 					Constructors
      **************************************************************/
     public User(){
-        tracks = new ArrayList<Track>();
-        championships = new ArrayList<Championship>();
+//        tracks = new ArrayList<Track>();
+//        championships = new ArrayList<Championship>();
     }
     public User(String firstname, String lastname, String password, String eMail, String phoneNumber, boolean championship) {
         this.firstname = firstname;
@@ -40,32 +40,32 @@ public class User{
         this.phoneNumber = phoneNumber;
         this.takePartChampionship = championship;
 
-        tracks = new ArrayList<Track>();
-        championships = new ArrayList<Championship>();
+//        tracks = new ArrayList<Track>();
+//        championships = new ArrayList<Championship>();
     }
 	/* ************************************************************
 	 * 					Relations
 	 **************************************************************/
-    private List<Track> tracks;
-    private List<Championship> championships;
+//    private List<Track> tracks;
+//    private List<Championship> championships;
 
     /* ************************************************************
      * 					Helper methods
      **************************************************************/
-    public void addTrack(Track track){
-        tracks.add(track);
-    }
-
-    public void removeTrack(Track track){
-        tracks.remove(track);
-    }
-
-    public void addChampionship(Championship championship){
-        championships.add(championship);
-    }
-    public void removeChampionship(Championship championship){
-        championships.remove(championship);
-    }
+//    public void addTrack(Track track){
+//        tracks.add(track);
+//    }
+//
+//    public void removeTrack(Track track){
+//        tracks.remove(track);
+//    }
+//
+//    public void addChampionship(Championship championship){
+//        championships.add(championship);
+//    }
+//    public void removeChampionship(Championship championship){
+//        championships.remove(championship);
+//    }
 
     /* ************************************************************
      * 					Getters & Setters
@@ -133,18 +133,18 @@ public class User{
     public void setTakePartChampionship(boolean takePartChampionship) {
         this.takePartChampionship = takePartChampionship;
     }
-    public List<Track> getTracks() {
-        return tracks;
-    }
-
-    public void setTracks(List<Track> tracks) {
-        this.tracks = tracks;
-    }
-
-    public List<Championship> getChampionships() {
-        return championships;
-    }
-    public void setChampionships(List<Championship> championships) {
-        this.championships = championships;
-    }
+//    public List<Track> getTracks() {
+//        return tracks;
+//    }
+//
+//    public void setTracks(List<Track> tracks) {
+//        this.tracks = tracks;
+//    }
+//
+//    public List<Championship> getChampionships() {
+//        return championships;
+//    }
+//    public void setChampionships(List<Championship> championships) {
+//        this.championships = championships;
+//    }
 }

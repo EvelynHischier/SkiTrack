@@ -1,4 +1,4 @@
-package technotracks.ch.view;
+package technotracks.ch.skitrack_scrum;
 
 import android.content.IntentSender;
 import android.content.res.TypedArray;
@@ -6,6 +6,7 @@ import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -209,6 +210,10 @@ public class RecordTrackActivity extends BaseActivity implements
         point.setSpeed(location.getSpeed());
         point.setBearing(location.getBearing());
         // TODO link the point to the track
+
+        // if the track is not stored yet (asynchronus)
+        // use -> getIdTrack
+        point.setTrackID(currentTrack.getId() == null ? DatabaseAccess.getIdTrack(): this.currentTrack.getId());
         points.add(point);
         SetLocation(location);
         DatabaseAccess.writeGPSData(this, point);

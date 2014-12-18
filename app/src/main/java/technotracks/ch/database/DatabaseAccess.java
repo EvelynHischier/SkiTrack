@@ -4,9 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.google.api.client.util.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,8 +63,18 @@ public class DatabaseAccess {
         values.put(SQLHelper.TRACK_NAME, track.getName());
         values.put(SQLHelper.SYNC, false);
 
-        // if vehicle is not null
         return database.insert(SQLHelper.TABLE_NAME_TRACK, null, values);
+    }
+
+    public static long getIdTrack(){
+        String sql = "SELECT MAX("+SQLHelper.TRACK_ID+") FROM "+SQLHelper.TABLE_NAME_TRACK;
+
+        Cursor cursor = database.rawQuery(sql, null);
+
+        if(!cursor.moveToFirst())
+            return 0;
+
+        return cursor.getInt(0) +1;
     }
 
     public static List<Track> readTrack(Context context){
@@ -108,37 +120,34 @@ public class DatabaseAccess {
         values.put(SQLHelper.GPSDATA_SPEED, point.getSpeed());
         values.put(SQLHelper.GPSDATA_TIMESTAMP, new DateTime(point
                 .getTimestamp().getValue()).toString());
+        values.put(SQLHelper.TRACK_ID, point.getTrackID());
+
         return database.insert(SQLHelper.TABLE_NAME_GPSDATA, null, values);
     }
-    public static List<GPSData> readGPSData(Context context) {
+    public static List<GPSData> readGPSData(Context context, long trackIdOld) {
         List<GPSData> points = new ArrayList<GPSData>();
         GPSData point;
         Cursor cursor;
         String dateText;
 
         openConnection(context);
-        String sql = "SELECT * FROM " + SQLHelper.TABLE_NAME_GPSDATA;
+        String sql = "SELECT * FROM "+SQLHelper.TABLE_NAME_GPSDATA + " where "+SQLHelper.TRACK_ID +" = "+trackIdOld+" ";
         cursor = database.rawQuery(sql, null);
+
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             point = new GPSData();
-            point.setAccuracy(cursor.getFloat(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_ACCURACY)));
-            point.setAltitude(cursor.getDouble(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_ALTITUDE)));
-            point.setBearing(cursor.getFloat(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_BEARING)));
-            point.setId(cursor.getLong(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_ID)));
-            point.setLatitude(cursor.getDouble(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_LATITUDE)));
-            point.setLongitude(cursor.getDouble(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_LONGITUDE)));
-            point.setSatellites(cursor.getInt(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_SATELLITES)));
-            dateText = cursor.getString(cursor
-                    .getColumnIndex(SQLHelper.GPSDATA_TIMESTAMP));
+            point.setAccuracy(cursor.getFloat(cursor.getColumnIndex(SQLHelper.GPSDATA_ACCURACY)));
+            point.setAltitude(cursor.getDouble(cursor.getColumnIndex(SQLHelper.GPSDATA_ALTITUDE)));
+            point.setBearing(cursor.getFloat(cursor.getColumnIndex(SQLHelper.GPSDATA_BEARING)));
+//            point.setId(cursor.getLong(cursor.getColumnIndex(SQLHelper.GPSDATA_ID)));
+            point.setLatitude(cursor.getDouble(cursor.getColumnIndex(SQLHelper.GPSDATA_LATITUDE)));
+            point.setLongitude(cursor.getDouble(cursor.getColumnIndex(SQLHelper.GPSDATA_LONGITUDE)));
+            point.setSatellites(cursor.getInt(cursor.getColumnIndex(SQLHelper.GPSDATA_SATELLITES)));
+
+            dateText = cursor.getString(cursor.getColumnIndex(SQLHelper.GPSDATA_TIMESTAMP));
             point.setTimestamp(new DateTime(dateText));
+
             points.add(point);
             cursor.moveToNext();
         }
@@ -195,4 +204,5 @@ public class DatabaseAccess {
 
         return users;
     }
+
 }

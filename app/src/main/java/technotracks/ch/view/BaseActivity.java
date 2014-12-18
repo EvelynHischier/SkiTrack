@@ -232,17 +232,25 @@ public class BaseActivity extends Activity {
 //        DatabaseAccess.openConnection(this);
 //        track.setId(DatabaseAccess.writeTrack(track));
 
-        Synchronize sync = new Synchronize();
 
-        List<User> users  =  DatabaseAccess.readUser(this);
+        // user
+        Synchronize sync = new Synchronize();
+//
+//        List<User> users  =  DatabaseAccess.readUser(this);
 //
 //
-////        sync.new SyncTrack(this, tracks).execute();
+//        sync.new SyncUser(this, users).execute();
+
+//        for (User user: users)
+//        DatabaseAccess.updateToSynced(this, user.getId(), SQLHelper.TABLE_NAME_USER);
 //
-//        for (Track track: tracks)
-//        DatabaseAccess.updateToSynced(this, track.getIdLocal(), SQLHelper.TABLE_NAME_TRACK);
-//
-        Log.i("size ", users.size()+"");
-        Log.i("User", users.get(0).getFirstname()+" : "+users.get(0).getPassword());
+//        Log.i("size ", users.size()+"");
+//        Log.i("User", users.get(0).getFirstname()+" : "+users.get(0).getPassword());
+
+
+        // track & gps
+        List<Track> tracks = DatabaseAccess.readTrack(this);
+        sync.new SyncTrack(this, tracks).execute();
+
     }
 }
