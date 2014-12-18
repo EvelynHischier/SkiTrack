@@ -1,4 +1,4 @@
-package technotracks.ch.skitrack_scrum;
+package technotracks.ch.view;
 
 import android.app.Activity;
 import android.content.Intent;

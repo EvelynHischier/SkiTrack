@@ -1,4 +1,4 @@
-package technotracks.ch.skitrack_scrum.component;
+package technotracks.ch.view.component;
 /*******************************************************************************
  * This file is part of GPSLogger for Android.
  *

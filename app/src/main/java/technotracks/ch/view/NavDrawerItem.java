@@ -1,4 +1,4 @@
-package technotracks.ch.skitrack_scrum;
+package technotracks.ch.view;
 
 /**
  * Created by Blechfalke on 16.12.14.

@@ -7,7 +7,7 @@ import android.content.SharedPreferences.Editor;
 
 import java.util.HashMap;
 
-import technotracks.ch.skitrack_scrum.LoginActivity;
+import technotracks.ch.view.LoginActivity;
 
 /**
  * Created by Blechfalke on 16.12.14.

@@ -10,8 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-    <android:uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -23,7 +22,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".skitrack_scrum.LoginActivity"
+            android:name=".view.LoginActivity"
             android:label="@string/title_activity_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,28 +31,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".skitrack_scrum.BaseActivity"
+            android:name=".view.BaseActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name=".skitrack_scrum.RecordTrackActivity"
+            android:name=".view.RecordTrackActivity"
             android:label="@string/title_recordTrack" >
         </activity>
         <activity
-            android:name=".skitrack_scrum.AndroidDatabaseManager"
-            android:parentActivityName=".skitrack_scrum.BaseActivity" >
+            android:name=".view.AndroidDatabaseManager"
+            android:parentActivityName=".view.BaseActivity" >
 
             <!-- The meta-data element is needed for versions lower than 4.1 -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".skitrack_scrum.BaseActivity" />
+                android:value=".view.BaseActivity" />
         </activity>
         <activity
-            android:name=".skitrack_scrum.ShowMapActivity"
+            android:name=".view.ShowMapActivity"
             android:label="@string/title_activity_show_map" >
         </activity>
         <activity
-            android:name=".skitrack_scrum.TrackHistoryActivity"
+            android:name=".view.TrackHistoryActivity"
             android:label="@string/title_activity_track_history" >
         </activity>
     </application>

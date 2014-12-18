@@ -1,4 +1,4 @@
-package technotracks.ch.skitrack_scrum;
+package technotracks.ch.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,12 +18,10 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.technotracks.backend.trackApi.model.Track;
 import ch.technotracks.backend.userApi.model.User;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
 import technotracks.ch.database.DatabaseAccess;
-import technotracks.ch.database.SQLHelper;
 import technotracks.ch.database.Synchronize;
 
 
@@ -164,7 +162,7 @@ public class BaseActivity extends Activity {
                 intent = new Intent(this, RecordTrackActivity.class);
                 break;
             case 1:
-                intent = new Intent(this, TrackHistoryActivity.class);
+                intent = new Intent(this, ShowMapActivity.class);
                 break;
             case 2:
                 intent = new Intent(this, AndroidDatabaseManager.class);

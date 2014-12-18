@@ -1,12 +1,13 @@
-package technotracks.ch.skitrack_scrum;
+package technotracks.ch.view;
 
 import android.content.IntentSender;
 import android.content.res.TypedArray;
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ import technotracks.ch.R;
 import technotracks.ch.common.Session;
 import technotracks.ch.constant.Constant;
 import technotracks.ch.database.DatabaseAccess;
-import technotracks.ch.skitrack_scrum.component.ToggleComponent;
+import technotracks.ch.view.component.ToggleComponent;
 
 public class RecordTrackActivity extends BaseActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -90,6 +91,7 @@ public class RecordTrackActivity extends BaseActivity implements
                             // requestStartLogging();
                             startCapture();
                         } else {
+                            stopCapture();
                             // requestStopLogging();
                         }
                     }
@@ -100,6 +102,10 @@ public class RecordTrackActivity extends BaseActivity implements
             SetLocation(Session.getCurrentLocationInfo());
         }
 
+        /*
+		 * Create a new location client, using the enclosing class to handle
+		 * callbacks.
+		 */
         mLocationClient = new GoogleApiClient.Builder(this)
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -113,10 +119,7 @@ public class RecordTrackActivity extends BaseActivity implements
         mLocationRequest.setInterval(Constant.UPDATE_INTERVAL);
         // Set the fastest update interval to 1 second
         mLocationRequest.setFastestInterval(Constant.FASTEST_INTERVAL);
-		/*
-		 * Create a new location client, using the enclosing class to handle
-		 * callbacks.
-		 */
+
 
     }
 
@@ -134,29 +137,15 @@ public class RecordTrackActivity extends BaseActivity implements
         if (mUpdatesRequested)
             startCapture();
 
-        setButtonLabel();
         super.onStart();
     }
 
-    public void btnStartStopClicked(View view) {
-        if (mUpdatesRequested) {
-            stopCapture();
-        } else {
-            startCapture();
-        }
-        setButtonLabel();
-    }
-
-    private void setButtonLabel() {
-        /*Button btnStart = (Button) findViewById(R.id.btnStartStopRecording);
-        btnStart.setText(mUpdatesRequested ? getString(R.string.stop)
-                : getString(R.string.start));*/
-    }
 
     /**
      * Stop capturing and upload data if possible
      */
     private void stopCapture() {
+        System.out.println("STOP");
         mUpdatesRequested = false;
         Session.setStarted(false);
         // If the client is connected
@@ -219,31 +208,10 @@ public class RecordTrackActivity extends BaseActivity implements
         point.setTimestamp(new DateTime(location.getTime()));
         point.setSpeed(location.getSpeed());
         point.setBearing(location.getBearing());
-//		point.setTrack(this.currentTrack);
+        // TODO link the point to the track
         points.add(point);
         SetLocation(location);
-        //update(point); // update the display
         DatabaseAccess.writeGPSData(this, point);
-    }
-
-    private void update(GPSData point) {
-        try {
-
-           /* TextView txtLatitude = (TextView) findViewById(R.id.latitude);
-            txtLatitude.setText(Double.toString(point.getLatitude()));
-            TextView txtLongitude = (TextView) findViewById(R.id.longitude);
-            txtLongitude.setText(Double.toString(point.getLongitude()));
-            TextView txtAltitude = (TextView) findViewById(R.id.altitude);
-            txtAltitude.setText(Double.toString(point.getAltitude()));
-            TextView txtAccuracy = (TextView) findViewById(R.id.accuracy);
-            txtAccuracy.setText(Double.toString(point.getAccuracy()));
-
-            TextView txtSatellites = (TextView) findViewById(R.id.satellites);
-            txtSatellites.setText(Integer.toString(0));*/
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(),
-                    Toast.LENGTH_LONG).show();
-        }
     }
 
     /*
@@ -309,7 +277,6 @@ public class RecordTrackActivity extends BaseActivity implements
     }
 
     public void SetLocation(Location locationInfo) {
-
 
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(6);
@@ -383,7 +350,6 @@ public class RecordTrackActivity extends BaseActivity implements
 
         txtDuration.setText(duration);
 
-
         String distanceUnit;
 
         double distanceValue = Session.getTotalTravelled();
@@ -401,9 +367,11 @@ public class RecordTrackActivity extends BaseActivity implements
         txtPoints.setText(Session.getNumLegs() + " " + getString(R.string.points));
 
         String providerName = locationInfo.getProvider();
+        TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
         if (!providerName.equalsIgnoreCase("gps")) {
-            TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
             txtSatelliteCount.setText("-");
+        } else{
+            txtSatelliteCount.setText(String.valueOf(getSatelliteNumber()));
         }
 
     }
@@ -497,5 +465,52 @@ public class RecordTrackActivity extends BaseActivity implements
             toast.show();
         }
 
+    }
+
+    /**
+     * A custom gps status listener. Update the satellite number
+     * @author Joel
+     *
+     */
+    private class MyGpsStatusListener implements GpsStatus.Listener
+    {
+        /**
+         * Called when the gps status change (typically when the number of satellites change)
+         */
+        @Override
+        public void onGpsStatusChanged(int event)
+        {
+            if(event == GpsStatus.GPS_EVENT_SATELLITE_STATUS)
+            {
+                int currentSatelliteNumber = getSatelliteNumber();
+
+				/* if we can update display we do it
+				   update only if satellite number change */
+                if(currentSatelliteNumber != satelliteNumber)
+                {
+                    satelliteNumber = currentSatelliteNumber;
+                }
+            }
+        }
+
+        /**
+         * Give the number of satellite currently locked
+         * @return
+         * The number of satellites
+         */
+        /*private int getSatelliteNumber()
+        {
+            int satNumber = 0;
+
+			/* Count the number of satellites */
+/*
+            GpsStatus gpsStatus = manager.getGpsStatus(null);
+            for (GpsSatellite ignored : gpsStatus.getSatellites())
+            {
+                satNumber++;
+            }
+
+            return gpsStatus.getMaxSatellites();
+        }*/
     }
 }

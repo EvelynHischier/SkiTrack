@@ -1,4 +1,4 @@
-package technotracks.ch.skitrack_scrum;
+package technotracks.ch.view;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
