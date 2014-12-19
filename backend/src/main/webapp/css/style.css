@@ -1,0 +1,33 @@
+@CHARSET "ISO-8859-1";
+
+body {
+    background: url(../images/snow.jpeg) fixed 50%;
+}
+
+input {
+    width: 200px;
+    height: 30px;
+    padding: 4px;
+    vertical-align: top;
+}
+
+#age{
+    width: 50px;
+}
+
+#ok{
+    color: #00FF00;
+    display: none;
+}
+
+label {
+    display: inline-block;
+    width: 100px;
+    margin-right: 20px;
+    vertical-align: top;
+    text-align: right;
+}
+
+.sakol{
+    width: 15px;
+}
