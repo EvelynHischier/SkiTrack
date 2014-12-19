@@ -97,6 +97,9 @@ public class DatabaseAccess {
             track.setName(cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_NAME)));
             track.setSync(true);
 
+            dateText = cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_CREATE));
+            track.setCreate(new DateTime(dateText));
+
             tracks.add(track);
             cursor.moveToNext();
         }
@@ -110,6 +113,7 @@ public class DatabaseAccess {
         Track track;
         String dateText;
         Cursor cursor;
+        int sync;
 
         openConnection(context);
 
@@ -123,7 +127,12 @@ public class DatabaseAccess {
 
             track.setIdLocal(cursor.getLong(cursor.getColumnIndex(SQLHelper.TRACK_ID)));
             track.setName(cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_NAME)));
-            track.setSync(true);
+
+            sync = cursor.getInt(cursor.getColumnIndex(SQLHelper.TRACK_NAME));
+            track.setSync(sync == 0 ? false : true);
+
+            dateText = cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_CREATE));
+            track.setCreate(new DateTime(dateText));
 
             tracks.add(track);
             cursor.moveToNext();

@@ -65,7 +65,6 @@ public class Synchronize {
                 for(Track track : tracks) {
                     track = myService.insert(track).execute();
 
-                    Log.e("id track", track.getId()+"");
                     new SyncGPSData(context, DatabaseAccess.readGPSDataToUpload(context, track.getIdLocal(), track.getId())).execute();
                 }
                 Log.e("finished uploading track", "-------------------------------");
