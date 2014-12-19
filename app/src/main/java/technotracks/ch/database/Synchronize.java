@@ -10,6 +10,7 @@ import com.google.api.client.googleapis.services.AbstractGoogleClientRequest;
 import com.google.api.client.googleapis.services.GoogleClientRequestInitializer;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import ch.technotracks.backend.gPSDataApi.GPSDataApi;
@@ -62,9 +63,10 @@ public class Synchronize {
             try {
                 // insert into app engine
                 for(Track track : tracks) {
+                    track = myService.insert(track).execute();
 
-                    new SyncGPSData(context, DatabaseAccess.readGPSData(context, track.getIdLocal())).execute();
-                    myService.insert(track).execute();
+                    Log.e("id track", track.getId()+"");
+                    new SyncGPSData(context, DatabaseAccess.readGPSData(context, track.getId())).execute();
                 }
                 Log.e("finished uploading track", "-------------------------------");
                 return 1l;
@@ -81,12 +83,12 @@ public class Synchronize {
     /* ***********************************************************************
      *                       User
      *************************************************************************/
-    public class SyncUser extends AsyncTask<Void, Void, Long>{
+    public class UploadUser extends AsyncTask<Void, Void, Long>{
         private Context context;
         private UserApi myService = null;
         private List<User> users;
 
-        public SyncUser(Context context, List<User> users){
+        public UploadUser(Context context, List<User> users){
             this.context = context;
             this.users = users;
         }
@@ -122,6 +124,39 @@ public class Synchronize {
         }
     }
 
+    public class DownlaodUser extends AsyncTask<Void, Void, List<User>>{
+        private Context context;
+        private UserApi myService = null;
+        private List<User> users;
+
+        public DownlaodUser(Context context){
+            this.context = context;
+        }
+
+        @Override
+        protected List<User> doInBackground(Void... params) {
+
+            // singleton
+            if (myService == null){
+                UserApi.Builder builder = new UserApi.Builder(AndroidHttp.newCompatibleTransport(),
+                        new AndroidJsonFactory(), null)
+                        .setRootUrl("https://skilful-union-792.appspot.com/_ah/api/")
+                        .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer(){
+                            @Override
+                            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                                abstractGoogleClientRequest.setDisableGZipContent(true);}
+                        });
+                myService = builder.build();
+            }
+
+            try {
+                //get
+                return myService.list().execute().getItems();
+            } catch (IOException e) {
+                return Collections.emptyList();
+            }
+        }
+    }
     /* ***********************************************************************
      *                       GPSData
      *************************************************************************/

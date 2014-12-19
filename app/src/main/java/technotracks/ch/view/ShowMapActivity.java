@@ -147,8 +147,8 @@ public class ShowMapActivity extends MapActivity
      */
     private void putExistingMarkers()
     {
-
-        List<GPSData> points = DatabaseAccess.readGPSData(this);
+        //TODO readGPSData --> insert id
+        List<GPSData> points = DatabaseAccess.readGPSData(this, 1);
         GeoPoint coordinates;
         double latitude;
         double longitude;

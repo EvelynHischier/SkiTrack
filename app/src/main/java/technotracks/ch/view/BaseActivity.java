@@ -23,8 +23,9 @@ import ch.technotracks.backend.userApi.model.User;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
 import technotracks.ch.database.DatabaseAccess;
+import technotracks.ch.database.SQLHelper;
 import technotracks.ch.database.Synchronize;
-import technotracks.ch.skitrack_scrum.RecordTrackActivity;
+import technotracks.ch.view.RecordTrackActivity;
 
 
 @SuppressWarnings("deprecation")
@@ -234,11 +235,9 @@ public class BaseActivity extends Activity {
 //        DatabaseAccess.openConnection(this);
 //        track.setId(DatabaseAccess.writeTrack(track));
 
-
-        // user
         Synchronize sync = new Synchronize();
-//
-//        List<User> users  =  DatabaseAccess.readUser(this);
+
+  //      List<User> users  =  DatabaseAccess.readUser(this);
 //
 //
 //        sync.new SyncUser(this, users).execute();
@@ -254,5 +253,8 @@ public class BaseActivity extends Activity {
         List<Track> tracks = DatabaseAccess.readTrack(this);
         sync.new SyncTrack(this, tracks).execute();
 
+        for (Track track : tracks){
+            DatabaseAccess.updateToSynced(this, track.getIdLocal(), SQLHelper.TABLE_NAME_TRACK, SQLHelper.TRACK_ID);
+        }
     }
 }

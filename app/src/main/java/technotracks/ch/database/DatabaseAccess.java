@@ -42,11 +42,11 @@ public class DatabaseAccess {
     //                      saving locally
     // *************************************************************************
 
-    public static long updateToSynced(Context context, long id, String table){
+    public static long updateToSynced(Context context, long id, String table, String titleID){
         openConnection(context);
 
         ContentValues values = new ContentValues();
-        String where = table +" = "+id;
+        String where = titleID +" = "+id;
         values.put(SQLHelper.SYNC, true);
 
         return database.update(table, values, where, null);
@@ -72,7 +72,7 @@ public class DatabaseAccess {
         Cursor cursor = database.rawQuery(sql, null);
 
         if(!cursor.moveToFirst())
-            return 0;
+            return 1;
 
         return cursor.getInt(0) +1;
     }
