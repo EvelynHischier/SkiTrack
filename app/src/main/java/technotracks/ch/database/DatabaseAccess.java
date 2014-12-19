@@ -154,6 +154,36 @@ public class DatabaseAccess {
         cursor.close();
         return points;
     }
+    public static List<GPSData> readGPSDataHistory(Context context, long trackIdOld) {
+        List<GPSData> points = new ArrayList<GPSData>();
+        GPSData point;
+        Cursor cursor;
+        String dateText;
+
+        openConnection(context);
+        String sql = "SELECT * FROM "+SQLHelper.TABLE_NAME_GPSDATA ;
+        cursor = database.rawQuery(sql, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            point = new GPSData();
+            point.setAccuracy(cursor.getFloat(cursor.getColumnIndex(SQLHelper.GPSDATA_ACCURACY)));
+            point.setAltitude(cursor.getDouble(cursor.getColumnIndex(SQLHelper.GPSDATA_ALTITUDE)));
+            point.setBearing(cursor.getFloat(cursor.getColumnIndex(SQLHelper.GPSDATA_BEARING)));
+            point.setId(cursor.getLong(cursor.getColumnIndex(SQLHelper.GPSDATA_ID)));
+            point.setLatitude(cursor.getDouble(cursor.getColumnIndex(SQLHelper.GPSDATA_LATITUDE)));
+            point.setLongitude(cursor.getDouble(cursor.getColumnIndex(SQLHelper.GPSDATA_LONGITUDE)));
+            point.setSatellites(cursor.getInt(cursor.getColumnIndex(SQLHelper.GPSDATA_SATELLITES)));
+
+            dateText = cursor.getString(cursor.getColumnIndex(SQLHelper.GPSDATA_TIMESTAMP));
+            point.setTimestamp(new DateTime(dateText));
+
+            points.add(point);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return points;
+    }
 
     // *************************************************************************
     //                      User
