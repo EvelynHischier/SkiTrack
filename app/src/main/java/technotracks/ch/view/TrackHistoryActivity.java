@@ -1,16 +1,28 @@
 package technotracks.ch.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
 import technotracks.ch.database.DatabaseAccess;
 
 public class TrackHistoryActivity extends BaseActivity {
+
+    public static final String EXTRA_TRACK_ID = "Track_ID";
+    private List<Track> allTracks;
+    private List<String> allTitles;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,19 +40,27 @@ public class TrackHistoryActivity extends BaseActivity {
         //now you must initialize your list view
         ListView listview =(ListView)findViewById(R.id.list_track_history);
 
-        List<Track> tracks = DatabaseAccess.readTrack(this);
+        allTracks = DatabaseAccess.readTrackHistory(this);
 
-        String[] trackTitles = new String[tracks.size()];
-        int i = 0;
-        for (Track t : tracks){
-            trackTitles[i++] = t.toString();
+        allTitles = new ArrayList<String>();
+
+        for (Track t : allTracks){
+            String historyText = t.getCreate() + " - " + t.getName() + " - Synched: " + t.getSync();
+            allTitles.add(historyText);
         }
 
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, trackTitles);
+        listview.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, allTitles));
 
-        listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Track clicked = allTracks.get(position);
+                Intent i = new Intent(getApplicationContext(), ShowMapActivity.class);
+                i.putExtra(EXTRA_TRACK_ID, clicked.getIdLocal());
+                startActivity(i);
+            }
+        });
     }
 
 }

@@ -158,12 +158,13 @@ public class RecordTrackActivity extends BaseActivity implements
             // mLocationClient.removeLocationUpdates(this);
             Session.setCurrentLocationInfo(null);
             LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
+
+            /*
+             * After disconnect() is called, the client is considered "dead".
+             */
             mLocationClient.disconnect();
         }
 
-		/*
-		 * After disconnect() is called, the client is considered "dead".
-		 */
 
     }
 
@@ -209,7 +210,6 @@ public class RecordTrackActivity extends BaseActivity implements
         point.setTimestamp(new DateTime(location.getTime()));
         point.setSpeed(location.getSpeed());
         point.setBearing(location.getBearing());
-        // TODO link the point to the track
 
         // if the track is not stored yet (asynchronus)
         // use -> getIdTrack

@@ -38,7 +38,7 @@ import technotracks.ch.network.NetworkTools;
  */
 public class ShowMapActivity extends MapActivity
 {
-    private int track;
+    private long track_id;
     private int satelliteNumber;
     private ArrayWayOverlay path;
     private List<GeoPoint> geoPoints;
@@ -83,7 +83,7 @@ public class ShowMapActivity extends MapActivity
         Bundle b = i.getExtras();
         if(b != null)
         {
-            track = b.getInt("trackNumber");
+            track_id = b.getLong(TrackHistoryActivity.EXTRA_TRACK_ID);
         }
 
 		/* Set the map and initialize it */
@@ -93,7 +93,7 @@ public class ShowMapActivity extends MapActivity
         map.setBuiltInZoomControls(true);
         mc = map.getController();
 
-        putExistingMarkers();
+        putExistingMarkers(track_id);
 
     }
 
@@ -145,10 +145,10 @@ public class ShowMapActivity extends MapActivity
     /**
      * Test if data exist for the selected track and put them on the map
      */
-    private void putExistingMarkers()
+    private void putExistingMarkers(long id)
     {
         //TODO readGPSData --> insert id
-        List<GPSData> points = DatabaseAccess.readGPSData(this, 1);
+        List<GPSData> points = DatabaseAccess.readGPSData(this, id);
         GeoPoint coordinates;
         double latitude;
         double longitude;
@@ -160,11 +160,12 @@ public class ShowMapActivity extends MapActivity
             geoPoints.add(coordinates);
         }
 
-        addStartPoint(geoPoints.get(0));
-        addStopPoint(geoPoints.get(geoPoints.size() - 1));
-        addPath();
-
-        map.setCenter(geoPoints.get(geoPoints.size() - 1));	//re-center the view on the current position
+        if (geoPoints.size() > 0) {
+            addStartPoint(geoPoints.get(0));
+            addStopPoint(geoPoints.get(geoPoints.size() - 1));
+            addPath();
+            map.setCenter(geoPoints.get(geoPoints.size() - 1));	//re-center the view on the current position
+        }
         mc.setZoom(Constant.DEFAULT_ZOOM);	//set the zoom to the default
 
         map.redrawTiles();	//refresh the map

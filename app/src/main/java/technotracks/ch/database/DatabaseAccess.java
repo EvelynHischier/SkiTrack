@@ -128,7 +128,7 @@ public class DatabaseAccess {
             track.setIdLocal(cursor.getLong(cursor.getColumnIndex(SQLHelper.TRACK_ID)));
             track.setName(cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_NAME)));
 
-            sync = cursor.getInt(cursor.getColumnIndex(SQLHelper.TRACK_NAME));
+            sync = cursor.getInt(cursor.getColumnIndex(SQLHelper.SYNC));
             track.setSync(sync == 0 ? false : true);
 
             dateText = cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_CREATE));

@@ -21,32 +21,6 @@ public abstract class DirectoryTools
     }
 
     /**
-     * Give the directory for CSV export
-     * @return
-     * The file
-     */
-    public static File getCSVExportDirectory()
-    {
-        String path = getAppDirectory().getAbsolutePath() + File.separator
-                + Constant.EXPORT_FOLDER_NAME + File.separator + Constant.CSV_FOLDER_NAME;
-
-        return directory(path);
-    }
-
-    /**
-     * Give the directory for KML export
-     * @return
-     * The file
-     */
-    public static File getKMLExportDirectory()
-    {
-        String path = getAppDirectory().getAbsolutePath() + File.separator
-                + Constant.EXPORT_FOLDER_NAME + File.separator + Constant.KML_FOLDER_NAME;
-
-        return directory(path);
-    }
-
-    /**
      * Give the maps directory
      * @return
      * The file

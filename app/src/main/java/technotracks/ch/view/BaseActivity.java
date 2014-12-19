@@ -19,13 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.technotracks.backend.trackApi.model.Track;
-import ch.technotracks.backend.userApi.model.User;
 import technotracks.ch.R;
 import technotracks.ch.controller.SessionManager;
 import technotracks.ch.database.DatabaseAccess;
 import technotracks.ch.database.SQLHelper;
 import technotracks.ch.database.Synchronize;
-import technotracks.ch.view.RecordTrackActivity;
 
 
 @SuppressWarnings("deprecation")
@@ -165,7 +163,7 @@ public class BaseActivity extends Activity {
                 intent = new Intent(this, RecordTrackActivity.class);
                 break;
             case 1:
-                intent = new Intent(this, ShowMapActivity.class);
+                intent = new Intent(this, TrackHistoryActivity.class);
                 break;
             case 2:
                 intent = new Intent(this, AndroidDatabaseManager.class);

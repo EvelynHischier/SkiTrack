@@ -11,11 +11,18 @@
         android:layout_height="match_parent">
 
         <!-- Add content here -->
-
-        <ListView
-            android:id="@+id/list_track_history"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:fadeScrollbars="false"
+            android:scrollbars="vertical">
+
+            <ListView
+                android:id="@+id/list_track_history"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
+            </ScrollView>
 
     </FrameLayout>
 
