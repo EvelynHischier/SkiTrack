@@ -6,6 +6,7 @@ package technotracks.ch.constant;
 public class Constant {
     // downloadMap
     public static final String MAP_SERVER_URL = "http://download.mapsforge.org/maps/europe/switzerland.map";
+    public static final String URL_TO_UPLOAD_DATA = "http://vlhiigdev.hevs.ch:8080/TechnoTracksServer/rest/TechnoTracksServer";
 
     // captureDisplay
     public static final long MIN_TIME = 30 * 1000;
@@ -15,6 +16,7 @@ public class Constant {
     public static final String MAP_FOLDER_NAME = "maps";
     public static final String TECHNOTRACKS_FOLDER_NAME = "TechnoTracks";
     public static final String EXPORT_FOLDER_NAME = "export";
+    public static final String CSV_FOLDER_NAME = "csv";
 
     // Recording Parameters
     // Milliseconds per second

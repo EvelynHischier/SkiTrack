@@ -46,6 +46,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     public static final String CHAMPIONSHIP_ID = "id_championship";
     public static final String CHAMPIONSHIP_START = "start_date";
     public static final String CHAMPIONSHIP_END = "end_date";
+    public static final String CHAMPIONSHIP_NAME = "name";
 
     // Title of Columns of track
     public static final String TRACK_ID = "id_track";
@@ -113,7 +114,9 @@ public class SQLHelper extends SQLiteOpenHelper {
             + TABLE_NAME_CHAMPIONSHIP + "("
             + CHAMPIONSHIP_ID + " INTEGER PRIMARY KEY,"
             + CHAMPIONSHIP_START + " DATE, "
-            + CHAMPIONSHIP_END + " DATE)";
+            + CHAMPIONSHIP_END + " DATE, "
+            + CHAMPIONSHIP_NAME + " TEXT" +
+            ")";
 
     // track
     public static final String TABLE_CREATE_TRACK = "CREATE TABLE IF NOT EXISTS "

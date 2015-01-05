@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.technotracks.backend.championshipApi.model.Championship;
 import ch.technotracks.backend.gPSDataApi.model.GPSData;
 import ch.technotracks.backend.trackApi.model.Track;
 import ch.technotracks.backend.userApi.model.User;
@@ -42,6 +43,7 @@ public class DatabaseAccess {
     //                      saving locally
     // *************************************************************************
 
+    // set the sync boolean to true
     public static long updateToSynced(Context context, long id, String table, String titleID){
         openConnection(context);
 
@@ -66,6 +68,8 @@ public class DatabaseAccess {
         return database.insert(SQLHelper.TABLE_NAME_TRACK, null, values);
     }
 
+    // get the last used id track + 1
+    // to inserting a gpsdata if the track is currently not saved (asynchronous)
     public static long getIdTrack(){
         String sql = "SELECT MAX("+SQLHelper.TRACK_ID+") FROM "+SQLHelper.TABLE_NAME_TRACK;
 
@@ -77,6 +81,7 @@ public class DatabaseAccess {
         return cursor.getInt(0) +1;
     }
 
+    // reads every track which is not synchronized
     public static List<Track> readTrack(Context context){
         List<Track> tracks = new ArrayList<Track>();
         Track track;
@@ -108,6 +113,7 @@ public class DatabaseAccess {
         return tracks;
     }
 
+    // get all stored tracks (used in history)
     public static List<Track> readTrackHistory(Context context){
         List<Track> tracks = new ArrayList<Track>();
         Track track;
@@ -191,6 +197,8 @@ public class DatabaseAccess {
         cursor.close();
         return points;
     }
+
+    // replaces the local trackId with the id of app engine
     public static List<GPSData> readGPSDataToUpload(Context context, long trackIdOld, long trackIdNEw) {
         List<GPSData> points = new ArrayList<GPSData>();
         GPSData point;
@@ -271,6 +279,52 @@ public class DatabaseAccess {
         cursor.close();
 
         return users;
+    }
+
+    // *************************************************************************
+    //                        Championship
+    // *************************************************************************
+    public static long writeChampion(Context context, Championship championship) {
+        ContentValues values = new ContentValues();
+        openConnection(context);
+
+        values.put(SQLHelper.CHAMPIONSHIP_END, new DateTime(championship.getEnd().getValue()).toString());
+        values.put(SQLHelper.CHAMPIONSHIP_START, new DateTime(championship.getStart().getValue()).toString()); championship.getStart();
+        values.put(SQLHelper.CHAMPIONSHIP_NAME, championship.getName());
+
+        return database.insert(SQLHelper.TABLE_NAME_CHAMPIONSHIP, null, values);
+    }
+
+    public static List<Championship> readChampionship(Context context){
+        List<Championship> championships = new ArrayList<Championship>();
+        Championship championship;
+        Cursor cursor;
+
+        openConnection(context);
+
+        String sql = "SELECT * FROM "+SQLHelper.TABLE_NAME_CHAMPIONSHIP ;
+        cursor = database.rawQuery(sql, null);
+
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()) {
+            championship = new Championship();
+
+//            championship = cursor.getInt(cursor.getColumnIndex(SQLHelper.USER_TAKE_PART_CHAMPIONSHIP));
+//            user.setChampionship((championship == 1 ? true : false));
+//
+//            user.setFirstname(cursor.getString(cursor.getColumnIndex(SQLHelper.USER_FIRSTNAME)));
+//            user.setLastname(cursor.getString(cursor.getColumnIndex(SQLHelper.USER_LASTNAME)));
+//            user.setEMail(cursor.getString(cursor.getColumnIndex(SQLHelper.USER_EMAIL)));
+//            user.setPassword(cursor.getString(cursor.getColumnIndex(SQLHelper.USER_PASSWORD)));
+//            user.setPhoneNumber(cursor.getString(cursor.getColumnIndex(SQLHelper.USER_PHONENUMBER)));
+
+            championships.add(championship);
+            cursor.moveToNext();
+        }
+        cursor.close();
+
+        return championships;
     }
 
 }

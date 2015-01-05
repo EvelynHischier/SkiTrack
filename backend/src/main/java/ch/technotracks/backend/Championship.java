@@ -22,6 +22,7 @@ public class Championship{
     private Long id;
     private Date start;
     private Date end;
+    private String name;
 
     /* ************************************************************
      * 					Constructors
@@ -85,5 +86,12 @@ public class Championship{
     @ApiResourceProperty(ignored = AnnotationBoolean.TRUE)
     public void setUsers(List<Ref<User>> users) {
         this.users = users;
+    }
+
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 }
