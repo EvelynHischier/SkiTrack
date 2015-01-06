@@ -1,6 +1,8 @@
 package technotracks.ch.view;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +11,7 @@ import android.graphics.Paint;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.os.Bundle;
+import android.os.Vibrator;
 
 import org.mapsforge.android.maps.MapActivity;
 import org.mapsforge.android.maps.MapController;
@@ -62,7 +65,7 @@ public class ShowMapActivity extends MapActivity
         start = null;
         stop = null;
 
-        /* Test if network is available for upload data and download map if necessary */
+        /* Test if network is available and download map if necessary */
         if(NetworkTools.isNetworkAvailable(getApplicationContext()))
         {
 			/* If there is no map start the download */
@@ -262,6 +265,17 @@ public class ShowMapActivity extends MapActivity
             tmp.setStrokeJoin(Paint.Join.ROUND);
 
             return tmp;
+        }
+    }
+
+    public class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // assumes WordService is a registered service
+            System.out.println("Broadcast received");
+            Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(2000);
         }
     }
 }

@@ -2,7 +2,10 @@ package technotracks.ch.common;
 
 import android.os.Environment;
 
+import com.google.api.client.util.Lists;
+
 import java.io.File;
+import java.util.ArrayList;
 
 import technotracks.ch.constant.Constant;
 
@@ -28,7 +31,6 @@ public abstract class DirectoryTools
     public static File getMapsDirectory()
     {
         String path = getAppDirectory().getAbsolutePath() + File.separator + Constant.MAP_FOLDER_NAME;
-
         return directory(path);
     }
 

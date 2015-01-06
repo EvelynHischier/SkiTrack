@@ -1,11 +1,17 @@
 package technotracks.ch.view;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
+import android.content.ServiceConnection;
 import android.content.res.TypedArray;
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -32,12 +38,18 @@ import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
 import technotracks.ch.common.Session;
 import technotracks.ch.constant.Constant;
+import technotracks.ch.constant.NoGPSDialog;
 import technotracks.ch.database.DatabaseAccess;
+import technotracks.ch.gps.GpsLoggingService;
+import technotracks.ch.gps.IGpsLoggingServiceClient;
 import technotracks.ch.view.component.ToggleComponent;
 
-public class RecordTrackActivity extends BaseActivity implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener,View.OnClickListener {
+public class RecordTrackActivity extends BaseActivity implements View.OnClickListener, IGpsLoggingServiceClient {
+        //GoogleApiClient.ConnectionCallbacks,
+        //GoogleApiClient.OnConnectionFailedListener, LocationListener,View.OnClickListener, {
+
+    private static Intent serviceIntent;
+    private GpsLoggingService loggingService;
 
     private final String STATE_RECORDING = "Recording";
     private final String STATE_CURRENT_TRACK = "Track";
@@ -80,6 +92,11 @@ public class RecordTrackActivity extends BaseActivity implements
 
         setImageTooltips();
 
+        if(!((LocationManager)getSystemService(LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER))
+        {
+            NoGPSDialog.showNoGPSDialog(this);
+        }
+
         // Toggle the play and pause.
         toggleComponent = ToggleComponent.getBuilder()
                 .addOnView(findViewById(R.id.simple_play))
@@ -89,11 +106,14 @@ public class RecordTrackActivity extends BaseActivity implements
                     @Override
                     public void onStatusChange(boolean status) {
                         if (status) {
-                            // requestStartLogging();
-                            startCapture();
+                            //requestStartLogging();
+                            //startCapture();
+                            loggingService.StartLogging();
+
                         } else {
-                            stopCapture();
-                            // requestStopLogging();
+                            loggingService.StopLogging();
+//                            stopCapture();
+//                            requestStopLogging();
                         }
                     }
                 })
@@ -103,27 +123,53 @@ public class RecordTrackActivity extends BaseActivity implements
             SetLocation(Session.getCurrentLocationInfo());
         }
 
-        /*
-		 * Create a new location client, using the enclosing class to handle
-		 * callbacks.
-		 */
-        mLocationClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        StartAndBindService();
 
-        mLocationRequest = LocationRequest.create();
-        // Use high accuracy
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        // Set the update interval to 5 seconds
-        mLocationRequest.setInterval(Constant.UPDATE_INTERVAL);
-        // Set the fastest update interval to 1 second
-        mLocationRequest.setFastestInterval(Constant.FASTEST_INTERVAL);
+//        /*
+//		 * Create a new location client, using the enclosing class to handle
+//		 * callbacks.
+//		 */
+//        mLocationClient = new GoogleApiClient.Builder(this)
+//                .addApi(LocationServices.API)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .build();
+//
+//        mLocationRequest = LocationRequest.create();
+//        // Use high accuracy
+//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+//        // Set the update interval to 5 seconds
+//        mLocationRequest.setInterval(Constant.UPDATE_INTERVAL);
+//        // Set the fastest update interval to 1 second
+//        mLocationRequest.setFastestInterval(Constant.FASTEST_INTERVAL);
 
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        StartAndBindService();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        StartAndBindService();
+    }
+
+    @Override
+    protected void onPause() {
+        StopAndUnbindServiceIfRequired();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        StopAndUnbindServiceIfRequired();
+        super.onDestroy();
+
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(STATE_RECORDING, mUpdatesRequested);
@@ -133,153 +179,153 @@ public class RecordTrackActivity extends BaseActivity implements
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    protected void onStart() {
-        if (mUpdatesRequested)
-            startCapture();
-
-        super.onStart();
-    }
-
-
-    /**
-     * Stop capturing and upload data if possible
-     */
-    private void stopCapture() {
-        System.out.println("STOP");
-        mUpdatesRequested = false;
-        Session.setStarted(false);
-        // If the client is connected
-        if (mLocationClient.isConnected()) {
-			/*
-			 * Remove location updates for a listener. The current Activity is
-			 * the listener, so the argument is "this".
-			 */
-            // mLocationClient.removeLocationUpdates(this);
-            Session.setCurrentLocationInfo(null);
-            LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
-
-            /*
-             * After disconnect() is called, the client is considered "dead".
-             */
-            mLocationClient.disconnect();
-        }
+//    @Override
+//    protected void onStart() {
+//        if (mUpdatesRequested)
+//            startCapture();
+//
+//        super.onStart();
+//    }
 
 
-    }
+//    /**
+//     * Stop capturing and upload data if possible
+//     */
+//    private void stopCapture() {
+//        System.out.println("STOP");
+//        mUpdatesRequested = false;
+//        Session.setStarted(false);
+//        // If the client is connected
+//        if (mLocationClient.isConnected()) {
+//			/*
+//			 * Remove location updates for a listener. The current Activity is
+//			 * the listener, so the argument is "this".
+//			 */
+//            // mLocationClient.removeLocationUpdates(this);
+//            Session.setCurrentLocationInfo(null);
+//            LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
+//
+//            /*
+//             * After disconnect() is called, the client is considered "dead".
+//             */
+//            mLocationClient.disconnect();
+//        }
+//
+//
+//    }
 
-    /**
-     * Start capturing data
-     */
-    private void startCapture() {
-        mUpdatesRequested = true;
-        if (Session.isStarted())
-            return;
+//    /**
+//     * Start capturing data
+//     */
+//    private void startCapture() {
+//        mUpdatesRequested = true;
+//        if (Session.isStarted())
+//            return;
+//
+//        // Connect the client.
+//
+//        mLocationClient.connect();
+//        Session.setStarted(true);
+//    }
+//
+//    public int getSatelliteNumber() {
+//        return satelliteNumber;
+//    }
+//
+//    /*
+//     * Called when the Activity is no longer visible at all. Stop updates and
+//     * disconnect.
+//     */
+//    @Override
+//    protected void onStop() {
+//        // stopCapture();
+//
+//        super.onStop();
+//    }
 
-        // Connect the client.
-
-        mLocationClient.connect();
-        Session.setStarted(true);
-    }
-
-    public int getSatelliteNumber() {
-        return satelliteNumber;
-    }
-
-    /*
-     * Called when the Activity is no longer visible at all. Stop updates and
-     * disconnect.
-     */
-    @Override
-    protected void onStop() {
-        // stopCapture();
-
-        super.onStop();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        // Report to the UI that the location was updated
-        GPSData point = new GPSData();
-
-        point.setLatitude(location.getLatitude());
-        point.setLongitude(location.getLongitude());
-        point.setAltitude(location.getAltitude());
-        point.setSatellites(getSatelliteNumber());
-        point.setAccuracy(location.getAccuracy());
-        point.setTimestamp(new DateTime(location.getTime()));
-        point.setSpeed(location.getSpeed());
-        point.setBearing(location.getBearing());
-
-        // if the track is not stored yet (asynchronus)
-        // use -> getIdTrack
-        point.setTrackID(currentTrack.getId() == null ? DatabaseAccess.getIdTrack(): this.currentTrack.getId());
-        points.add(point);
-        SetLocation(location);
-        DatabaseAccess.writeGPSData(this, point);
-    }
-
-    /*
-     * Called by Location Services if the attempt to Location Services fails.
-     */
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-		/*
-		 * Google Play services can resolve some errors it detects. If the error
-		 * has a resolution, try sending an Intent to start a Google Play
-		 * services activity that can resolve error.
-		 */
-        if (connectionResult.hasResolution()) {
-            try {
-                // Start an Activity that tries to resolve the error
-                connectionResult.startResolutionForResult(this,
-                        BaseActivity.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-				/*
-				 * Thrown if Google Play services canceled the original
-				 * PendingIntent
-				 */
-            } catch (IntentSender.SendIntentException e) {
-                // Log the error
-                e.printStackTrace();
-            }
-        } else {
-			/*
-			 * If no resolution is available, display a dialog to the user with
-			 * the error.
-			 */
-            // showErrorDialog(connectionResult.getErrorCode());
-            System.out.println(connectionResult.getErrorCode());
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        // Display the connection status
-
-        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-
-        if (mUpdatesRequested) {
-            if (currentTrack == null) {
-                currentTrack = new Track();
-                currentTrack.setName("testTrack");
-                currentTrack.setCreate(new DateTime(new Date()));
-                currentTrack.setId(DatabaseAccess
-                        .writeTrack(this, currentTrack));
-            }
-
-            if (points == null)
-                points = new ArrayList<GPSData>();
-
-            LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient,mLocationRequest,this);
-        }
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        // TODO yolo
-    }
+//    @Override
+//    public void onLocationChanged(Location location) {
+//        // Report to the UI that the location was updated
+//        GPSData point = new GPSData();
+//
+//        point.setLatitude(location.getLatitude());
+//        point.setLongitude(location.getLongitude());
+//        point.setAltitude(location.getAltitude());
+//        point.setSatellites(getSatelliteNumber());
+//        point.setAccuracy(location.getAccuracy());
+//        point.setTimestamp(new DateTime(location.getTime()));
+//        point.setSpeed(location.getSpeed());
+//        point.setBearing(location.getBearing());
+//
+//        // if the track is not stored yet (asynchronus)
+//        // use -> getIdTrack
+//        point.setTrackID(currentTrack.getId() == null ? DatabaseAccess.getIdTrack(): this.currentTrack.getId());
+//        points.add(point);
+//        SetLocation(location);
+//        DatabaseAccess.writeGPSData(this, point);
+//    }
+//
+//    /*
+//     * Called by Location Services if the attempt to Location Services fails.
+//     */
+//    @Override
+//    public void onConnectionFailed(ConnectionResult connectionResult) {
+//		/*
+//		 * Google Play services can resolve some errors it detects. If the error
+//		 * has a resolution, try sending an Intent to start a Google Play
+//		 * services activity that can resolve error.
+//		 */
+//        if (connectionResult.hasResolution()) {
+//            try {
+//                // Start an Activity that tries to resolve the error
+//                connectionResult.startResolutionForResult(this,
+//                        BaseActivity.CONNECTION_FAILURE_RESOLUTION_REQUEST);
+//				/*
+//				 * Thrown if Google Play services canceled the original
+//				 * PendingIntent
+//				 */
+//            } catch (IntentSender.SendIntentException e) {
+//                // Log the error
+//                e.printStackTrace();
+//            }
+//        } else {
+//			/*
+//			 * If no resolution is available, display a dialog to the user with
+//			 * the error.
+//			 */
+//            // showErrorDialog(connectionResult.getErrorCode());
+//            System.out.println(connectionResult.getErrorCode());
+//        }
+//    }
+//
+//    @SuppressWarnings("unchecked")
+//    @Override
+//    public void onConnected(Bundle dataBundle) {
+//        // Display the connection status
+//
+//        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+//
+//        if (mUpdatesRequested) {
+//            if (currentTrack == null) {
+//                currentTrack = new Track();
+//                currentTrack.setName("testTrack");
+//                currentTrack.setCreate(new DateTime(new Date()));
+//                currentTrack.setId(DatabaseAccess
+//                        .writeTrack(this, currentTrack));
+//            }
+//
+//            if (points == null)
+//                points = new ArrayList<GPSData>();
+//
+//            LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient,mLocationRequest,this);
+//        }
+//
+//    }
+//
+//    @Override
+//    public void onConnectionSuspended(int i) {
+//        // TODO yolo
+//    }
 
     public void SetLocation(Location locationInfo) {
 
@@ -376,7 +422,7 @@ public class RecordTrackActivity extends BaseActivity implements
         if (!providerName.equalsIgnoreCase("gps")) {
             txtSatelliteCount.setText("-");
         } else{
-            txtSatelliteCount.setText(String.valueOf(getSatelliteNumber()));
+            //txtSatelliteCount.setText(String.valueOf(getSatelliteNumber()));
         }
 
     }
@@ -473,30 +519,118 @@ public class RecordTrackActivity extends BaseActivity implements
     }
 
     /**
+     * Provides a connection to the GPS Logging Service
+     */
+    private final ServiceConnection gpsServiceConnection = new ServiceConnection() {
+
+        public void onServiceDisconnected(ComponentName name) {
+            loggingService = null;
+        }
+
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            loggingService = ((GpsLoggingService.GpsLoggingBinder) service).getService();
+            GpsLoggingService.SetServiceClient(RecordTrackActivity.this);
+        }
+    };
+
+    /**
+     * Starts the service and binds the activity to it.
+     */
+    private void StartAndBindService() {
+
+        serviceIntent = new Intent(this, GpsLoggingService.class);
+        // Start the service in case it isn't already running
+        startService(serviceIntent);
+        // Now bind to service
+        bindService(serviceIntent, gpsServiceConnection, Context.BIND_AUTO_CREATE);
+        Session.setBoundToService(true);
+    }
+
+    /**
+     * Stops the service if it isn't logging. Also unbinds.
+     */
+    private void StopAndUnbindServiceIfRequired() {
+
+        if (Session.isBoundToService()) {
+
+            try {
+                unbindService(gpsServiceConnection);
+                Session.setBoundToService(false);
+            } catch (Exception e) {
+            }
+        }
+
+        if (!Session.isStarted()) {
+            //serviceIntent = new Intent(this, GpsLoggingService.class);
+            try {
+                stopService(serviceIntent);
+            } catch (Exception e) {
+            }
+
+        }
+
+    }
+
+    @Override
+    public void OnStatusMessage(String message) {
+
+    }
+
+    @Override
+    public void OnFatalMessage(String message) {
+
+    }
+
+    @Override
+    public void OnLocationUpdate(Location loc) {
+
+    }
+
+    @Override
+    public void OnSatelliteCount(int count) {
+
+    }
+
+    @Override
+    public void OnStartLogging() {
+
+    }
+
+    @Override
+    public void OnStopLogging() {
+
+    }
+
+    @Override
+    public void OnWaitingForLocation(boolean inProgress) {
+
+    }
+
+    /**
      * A custom gps status listener. Update the satellite number
      * @author Joel
      *
      */
-    private class MyGpsStatusListener implements GpsStatus.Listener
-    {
-        /**
-         * Called when the gps status change (typically when the number of satellites change)
-         */
-        @Override
-        public void onGpsStatusChanged(int event)
-        {
-            if(event == GpsStatus.GPS_EVENT_SATELLITE_STATUS)
-            {
-                int currentSatelliteNumber = getSatelliteNumber();
-
-				/* if we can update display we do it
-				   update only if satellite number change */
-                if(currentSatelliteNumber != satelliteNumber)
-                {
-                    satelliteNumber = currentSatelliteNumber;
-                }
-            }
-        }
+//    private class MyGpsStatusListener implements GpsStatus.Listener
+//    {
+//        /**
+//         * Called when the gps status change (typically when the number of satellites change)
+//         */
+//        @Override
+//        public void onGpsStatusChanged(int event)
+//        {
+//            if(event == GpsStatus.GPS_EVENT_SATELLITE_STATUS)
+//            {
+//                int currentSatelliteNumber = getSatelliteNumber();
+//
+//				/* if we can update display we do it
+//				   update only if satellite number change */
+//                if(currentSatelliteNumber != satelliteNumber)
+//                {
+//                    satelliteNumber = currentSatelliteNumber;
+//                }
+//            }
+//        }
 
         /**
          * Give the number of satellite currently locked
@@ -517,5 +651,5 @@ public class RecordTrackActivity extends BaseActivity implements
 
             return gpsStatus.getMaxSatellites();
         }*/
-    }
+    //}
 }
