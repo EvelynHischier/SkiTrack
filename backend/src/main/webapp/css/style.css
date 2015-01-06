@@ -1,7 +1,9 @@
 @CHARSET "ISO-8859-1";
 
 body {
-    background: url(../images/snow.jpeg) fixed 50%;
+	background: url(../images/snow.jpg) fixed 50%;
+	margin-left: 10px;
+	padding:20px 50px;
 }
 
 input {
@@ -13,11 +15,6 @@ input {
 
 #age{
     width: 50px;
-}
-
-#ok{
-    color: #00FF00;
-    display: none;
 }
 
 label {
