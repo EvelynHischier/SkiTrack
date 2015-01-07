@@ -20,6 +20,7 @@ public class Session extends Application {
     private static Location previousLocationInfo;
     private static double totalTravelled;
     private static int numLegs;
+    private static boolean isBound;
     private static boolean waitingForLocation;
 
     // ---------------------------------------------------
@@ -217,5 +218,19 @@ public class Session extends Application {
 
     public static int getNumLegs() {
         return numLegs;
+    }
+
+    /**
+     * @param isBound set whether the activity is bound to the GpsLoggingService
+     */
+    public static void setBoundToService(boolean isBound) {
+        Session.isBound = isBound;
+    }
+
+    /**
+     * @return whether the activity is bound to the GpsLoggingService
+     */
+    public static boolean isBoundToService() {
+        return isBound;
     }
 }

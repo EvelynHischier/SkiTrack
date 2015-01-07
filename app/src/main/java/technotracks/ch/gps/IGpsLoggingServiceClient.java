@@ -43,14 +43,6 @@ public interface IGpsLoggingServiceClient {
     public void OnStopLogging();
 
     /**
-     * A new current file name is available.
-     *
-     * @param newFileName
-     */
-    public void onFileName(String newFileName);
-
-
-    /**
      * Indicates that the location manager has started waiting for its next location
      */
     public void OnWaitingForLocation(boolean inProgress);

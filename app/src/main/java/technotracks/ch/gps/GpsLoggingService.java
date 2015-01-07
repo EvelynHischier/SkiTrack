@@ -35,7 +35,7 @@ public class GpsLoggingService extends Service  {
      *
      * @param mainForm The calling client
      */
-    protected static void SetServiceClient(IGpsLoggingServiceClient mainForm) {
+    public static void SetServiceClient(IGpsLoggingServiceClient mainForm) {
         mainServiceClient = mainForm;
     }
 
@@ -103,7 +103,7 @@ public class GpsLoggingService extends Service  {
     /**
      * Resets the form, resets file name if required, reobtains preferences
      */
-    protected void StartLogging() {
+    public void StartLogging() {
         System.out.println(".");
         Session.setAddNewTrackSegment(true);
 
@@ -199,8 +199,6 @@ public class GpsLoggingService extends Service  {
         }
     }
 
-
-
     /**
      * Gives a status message to the main service client to display
      *
@@ -276,6 +274,7 @@ public class GpsLoggingService extends Service  {
         if (IsMainFormVisible())
             mainServiceClient.OnLocationUpdate(loc);
 
+
     }
 
 
@@ -324,4 +323,3 @@ public class GpsLoggingService extends Service  {
     }
 
 }
-
