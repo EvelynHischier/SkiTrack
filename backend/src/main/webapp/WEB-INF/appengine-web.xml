@@ -8,4 +8,6 @@
         <property name="java.util.logging.config.file" value="WEB-INF/logging.properties" />
         <property name="gcm.api.key" value="AIzaSyDtDV-bQOZUuQjTprzb6dgXCWc4FzvtEIE" />
     </system-properties>
+
+    <sessions-enabled>true</sessions-enabled>
 </appengine-web-app>
