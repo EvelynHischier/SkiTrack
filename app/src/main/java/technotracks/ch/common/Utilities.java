@@ -4,6 +4,10 @@ package technotracks.ch.common;
  * Created by Blechfalke on 18.12.14.
  */
 public class Utilities {
+
+    /*
+    * Returns the Distance between two locations in meters
+     */
     public static double CalculateDistance(double latitude1, double longitude1, double latitude2, double longitude2) {
         /*
             Haversine formula:

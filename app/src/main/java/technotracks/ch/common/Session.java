@@ -3,6 +3,8 @@ package technotracks.ch.common;
 import android.app.Application;
 import android.location.Location;
 
+import ch.technotracks.backend.trackApi.model.Track;
+
 public class Session extends Application {
 
     // ---------------------------------------------------
@@ -10,17 +12,16 @@ public class Session extends Application {
     // ---------------------------------------------------
     private static boolean gpsEnabled;
     private static boolean isStarted;
+    private static Track currentTrack;
     private static boolean isUsingGps;
     private static int satellites;
     private static long startTimeStamp;
     private static long latestTimeStamp;
-    private static boolean addNewTrackSegment = true;
     private static Location currentLocationInfo;
     private static Location previousLocationInfo;
     private static double totalTravelled;
-    private static int numLegs;
+    private static int numPoints;
     private static boolean isBound;
-    private static boolean waitingForLocation;
 
     // ---------------------------------------------------
 
@@ -111,9 +112,9 @@ public class Session extends Application {
 
     public static void setTotalTravelled(double totalTravelled) {
         if (totalTravelled == 0) {
-            Session.numLegs = 0;
+            Session.numPoints = 1;
         } else {
-            Session.numLegs++;
+            Session.numPoints++;
         }
         Session.totalTravelled = totalTravelled;
     }
@@ -166,20 +167,6 @@ public class Session extends Application {
     }
 
     /**
-     * @return whether to create a new track segment
-     */
-    public static boolean shouldAddNewTrackSegment() {
-        return addNewTrackSegment;
-    }
-
-    /**
-     * @param addNewTrackSegment set whether to create a new track segment
-     */
-    public static void setAddNewTrackSegment(boolean addNewTrackSegment) {
-        Session.addNewTrackSegment = addNewTrackSegment;
-    }
-
-    /**
      * @param currentLocationInfo the latest Location class
      */
     public static void setCurrentLocationInfo(Location currentLocationInfo) {
@@ -193,16 +180,8 @@ public class Session extends Application {
         return currentLocationInfo;
     }
 
-    public static void setWaitingForLocation(boolean waitingForLocation) {
-        Session.waitingForLocation = waitingForLocation;
-    }
-
-    public static boolean isWaitingForLocation() {
-        return waitingForLocation;
-    }
-
-    public static int getNumLegs() {
-        return numLegs;
+    public static int getNumPoints() {
+        return numPoints;
     }
 
     /**
@@ -217,5 +196,22 @@ public class Session extends Application {
      */
     public static boolean isBoundToService() {
         return isBound;
+    }
+
+    public static Track getCurrentTrack() {
+        return currentTrack;
+    }
+
+    public static void setCurrentTrack(Track currentTrack) {
+        Session.currentTrack = currentTrack;
+    }
+
+    public static void resetSession(){
+        Session.numPoints = 0;
+        Session.totalTravelled = 0d;
+        Session.currentLocationInfo = null;
+        Session.previousLocationInfo = null;
+        Session.currentTrack = null;
+
     }
 }

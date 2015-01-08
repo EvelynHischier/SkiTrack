@@ -3,61 +3,32 @@ package technotracks.ch.view;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.content.res.TypedArray;
-import android.location.GpsSatellite;
-import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.api.client.util.DateTime;
-
-import java.io.Serializable;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import ch.technotracks.backend.gPSDataApi.model.GPSData;
-import ch.technotracks.backend.trackApi.model.Track;
 import technotracks.ch.R;
 import technotracks.ch.common.Session;
-import technotracks.ch.constant.Constant;
 import technotracks.ch.constant.NoGPSDialog;
-import technotracks.ch.database.DatabaseAccess;
 import technotracks.ch.gps.GpsLoggingService;
 import technotracks.ch.gps.IGpsLoggingServiceClient;
 import technotracks.ch.view.component.ToggleComponent;
 
 public class RecordTrackActivity extends BaseActivity implements View.OnClickListener, IGpsLoggingServiceClient {
-        //GoogleApiClient.ConnectionCallbacks,
-        //GoogleApiClient.OnConnectionFailedListener, LocationListener,View.OnClickListener, {
 
     private static Intent serviceIntent;
     private GpsLoggingService loggingService;
-
-    private final String STATE_RECORDING = "Recording";
-    private final String STATE_POINTS = "Points";
-
-
-    private GoogleApiClient mLocationClient;
-    private LocationRequest mLocationRequest;
-    private boolean mUpdatesRequested;
 
     private ToggleComponent toggleComponent;
 
@@ -105,26 +76,6 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
         }
 
         StartAndBindService();
-
-//        /*
-//		 * Create a new location client, using the enclosing class to handle
-//		 * callbacks.
-//		 */
-//        mLocationClient = new GoogleApiClient.Builder(this)
-//                .addApi(LocationServices.API)
-//                .addConnectionCallbacks(this)
-//                .addOnConnectionFailedListener(this)
-//                .build();
-//
-//        mLocationRequest = LocationRequest.create();
-//        // Use high accuracy
-//        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-//        // Set the update interval to 5 seconds
-//        mLocationRequest.setInterval(Constant.UPDATE_INTERVAL);
-//        // Set the fastest update interval to 1 second
-//        mLocationRequest.setFastestInterval(Constant.FASTEST_INTERVAL);
-
-
     }
 
     @Override
@@ -152,156 +103,7 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-//    @Override
-//    protected void onStart() {
-//        if (mUpdatesRequested)
-//            startCapture();
-//
-//        super.onStart();
-//    }
-
-
-//    /**
-//     * Stop capturing and upload data if possible
-//     */
-//    private void stopCapture() {
-//        System.out.println("STOP");
-//        mUpdatesRequested = false;
-//        Session.setStarted(false);
-//        // If the client is connected
-//        if (mLocationClient.isConnected()) {
-//			/*
-//			 * Remove location updates for a listener. The current Activity is
-//			 * the listener, so the argument is "this".
-//			 */
-//            // mLocationClient.removeLocationUpdates(this);
-//            Session.setCurrentLocationInfo(null);
-//            LocationServices.FusedLocationApi.removeLocationUpdates(mLocationClient,this);
-//
-//            /*
-//             * After disconnect() is called, the client is considered "dead".
-//             */
-//            mLocationClient.disconnect();
-//        }
-//
-//
-//    }
-
-//    /**
-//     * Start capturing data
-//     */
-//    private void startCapture() {
-//        mUpdatesRequested = true;
-//        if (Session.isStarted())
-//            return;
-//
-//        // Connect the client.
-//
-//        mLocationClient.connect();
-//        Session.setStarted(true);
-//    }
-//
-//    public int getSatelliteNumber() {
-//        return satelliteNumber;
-//    }
-//
-//    /*
-//     * Called when the Activity is no longer visible at all. Stop updates and
-//     * disconnect.
-//     */
-//    @Override
-//    protected void onStop() {
-//        // stopCapture();
-//
-//        super.onStop();
-//    }
-
-//    @Override
-//    public void onLocationChanged(Location location) {
-//        // Report to the UI that the location was updated
-//        GPSData point = new GPSData();
-//
-//        point.setLatitude(location.getLatitude());
-//        point.setLongitude(location.getLongitude());
-//        point.setAltitude(location.getAltitude());
-//        point.setSatellites(getSatelliteNumber());
-//        point.setAccuracy(location.getAccuracy());
-//        point.setTimestamp(new DateTime(location.getTime()));
-//        point.setSpeed(location.getSpeed());
-//        point.setBearing(location.getBearing());
-//
-//        // if the track is not stored yet (asynchronus)
-//        // use -> getIdTrack
-//        point.setTrackID(currentTrack.getId() == null ? DatabaseAccess.getIdTrack(): this.currentTrack.getId());
-//        points.add(point);
-//        SetLocation(location);
-//        DatabaseAccess.writeGPSData(this, point);
-//    }
-//
-//    /*
-//     * Called by Location Services if the attempt to Location Services fails.
-//     */
-//    @Override
-//    public void onConnectionFailed(ConnectionResult connectionResult) {
-//		/*
-//		 * Google Play services can resolve some errors it detects. If the error
-//		 * has a resolution, try sending an Intent to start a Google Play
-//		 * services activity that can resolve error.
-//		 */
-//        if (connectionResult.hasResolution()) {
-//            try {
-//                // Start an Activity that tries to resolve the error
-//                connectionResult.startResolutionForResult(this,
-//                        BaseActivity.CONNECTION_FAILURE_RESOLUTION_REQUEST);
-//				/*
-//				 * Thrown if Google Play services canceled the original
-//				 * PendingIntent
-//				 */
-//            } catch (IntentSender.SendIntentException e) {
-//                // Log the error
-//                e.printStackTrace();
-//            }
-//        } else {
-//			/*
-//			 * If no resolution is available, display a dialog to the user with
-//			 * the error.
-//			 */
-//            // showErrorDialog(connectionResult.getErrorCode());
-//            System.out.println(connectionResult.getErrorCode());
-//        }
-//    }
-//
-//    @SuppressWarnings("unchecked")
-//    @Override
-//    public void onConnected(Bundle dataBundle) {
-//        // Display the connection status
-//
-//        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
-//
-//        if (mUpdatesRequested) {
-//            if (currentTrack == null) {
-//                currentTrack = new Track();
-//                currentTrack.setName("testTrack");
-//                currentTrack.setCreate(new DateTime(new Date()));
-//                currentTrack.setId(DatabaseAccess
-//                        .writeTrack(this, currentTrack));
-//            }
-//
-//            if (points == null)
-//                points = new ArrayList<GPSData>();
-//
-//            LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient,mLocationRequest,this);
-//        }
-//
-//    }
-//
-//    @Override
-//    public void onConnectionSuspended(int i) {
-//
-//    }
-
     public void SetLocation(Location locationInfo) {
-        System.out.println("MainForm.Location set");
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(6);
 
@@ -320,15 +122,14 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
 
             txtAccuracy.setText(nf.format(accuracy) + getString(R.string.meters));
 
-            if (accuracy > 500) {
-                txtAccuracy.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
-            }
 
-            if (accuracy > 900) {
+            txtAccuracy.setTextColor(getResources().getColor(android.R.color.black));
+
+            if (accuracy > 10)
+                txtAccuracy.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+
+            if (accuracy > 20)
                 txtAccuracy.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
-            } else {
-                txtAccuracy.setTextColor(getResources().getColor(android.R.color.black));
-            }
 
         }
 
@@ -340,7 +141,7 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
         }
 
         if (locationInfo.hasSpeed()) {
-
+            System.out.println(locationInfo.getSpeed());
             float speed = locationInfo.getSpeed();
             String unit;
 
@@ -354,6 +155,9 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
             TextView txtSpeed = (TextView) findViewById(R.id.simpleview_txtSpeed);
             txtSpeed.setText(String.valueOf(nf.format(speed)) + unit);
 
+        } else {
+            TextView txtSpeed = (TextView) findViewById(R.id.simpleview_txtSpeed);
+            txtSpeed.setText("-");
         }
 
         if (locationInfo.hasBearing()) {
@@ -388,14 +192,12 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
 
         nf.setMaximumFractionDigits(1);
         txtTravelled.setText(nf.format(distanceValue) + " " + distanceUnit);
-        txtPoints.setText(Session.getNumLegs() + " " + getString(R.string.points));
+        txtPoints.setText(Session.getNumPoints() + " " + getString(R.string.points));
 
         String providerName = locationInfo.getProvider();
         TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
         if (!providerName.equalsIgnoreCase("gps")) {
             txtSatelliteCount.setText("-");
-        } else{
-            //txtSatelliteCount.setText(String.valueOf(getSatelliteNumber()));
         }
 
     }
@@ -511,9 +313,11 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
      */
     private void StartAndBindService() {
 
-        serviceIntent = new Intent(this, GpsLoggingService.class);
-        // Start the service in case it isn't already running
-        startService(serviceIntent);
+        if (serviceIntent == null) {
+            serviceIntent = new Intent(this, GpsLoggingService.class);
+            // Start the service in case it isn't already running
+            startService(serviceIntent);
+        }
         // Now bind to service
         bindService(serviceIntent, gpsServiceConnection, Context.BIND_AUTO_CREATE);
         Session.setBoundToService(true);
@@ -545,57 +349,81 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
-    public void OnStatusMessage(String message) {
-
-    }
-
-    @Override
     public void OnFatalMessage(String message) {
-
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void OnLocationUpdate(Location location) {
         // Report to the UI that the location was updated
         System.out.println("MainForm.Location received");
-//        GPSData point = new GPSData();
-//
-//        point.setLatitude(location.getLatitude());
-//        point.setLongitude(location.getLongitude());
-//        point.setAltitude(location.getAltitude());
-//        point.setSatellites(Session.getSatelliteCount());
-//        point.setAccuracy(location.getAccuracy());
-//        point.setTimestamp(new DateTime(location.getTime()));
-//        point.setSpeed(location.getSpeed());
-//        point.setBearing(location.getBearing());
-
-        // if the track is not stored yet (asynchronus)
-        // use -> getIdTrack
-       // point.setTrackID(currentTrack.getId() == null ? DatabaseAccess.getIdTrack(): this.currentTrack.getId());
-      //  points.add(point);
         SetLocation(location);
-        //DatabaseAccess.writeGPSData(this, point);
     }
 
     @Override
-    public void OnSatelliteCount(int count) {
-        Session.setSatelliteCount(count);
+    public void OnSatelliteCount() {
         TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
-        txtSatelliteCount.setText(String.valueOf(count));
+        txtSatelliteCount.setText(String.valueOf(Session.getSatelliteCount()));
     }
 
     @Override
     public void OnStartLogging() {
-        Toast.makeText(this, "Started Logging", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Started Logging", Toast.LENGTH_SHORT).show();
+
+        Session.resetSession();
+        EditText txtLatitude = (EditText) findViewById(R.id.simple_lat_text);
+        txtLatitude.setText(" ");
+        EditText txtLongitude = (EditText) findViewById(R.id.simple_lon_text);
+        txtLongitude.setText(" ");
+
+        TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
+        txtSatelliteCount.setText("-");
+        TextView txtAccuracy = (TextView) findViewById(R.id.simpleview_txtAccuracy);
+        txtAccuracy.setText("-");
+
+        TextView txtAltitude = (TextView) findViewById(R.id.simpleview_txtAltitude);
+        txtAltitude.setText("-");
+        ImageView imgDirection = (ImageView) findViewById(R.id.simpleview_imgDirection);
+        imgDirection.setRotation(0);
+        TextView txtDirection = (TextView) findViewById(R.id.simpleview_txtDirection);
+        txtDirection.setText("-");
+
+        TextView txtDuration = (TextView) findViewById(R.id.simpleview_txtDuration);
+        txtDuration.setText("-");
+        TextView txtSpeed = (TextView) findViewById(R.id.simpleview_txtSpeed);
+        txtSpeed.setText("-");
+
+        TextView txtTravelled = (TextView) findViewById(R.id.simpleview_txtDistance);
+        txtTravelled.setText("-");
+        TextView txtPoints = (TextView) findViewById(R.id.simpleview_txtPoints);
+        txtPoints.setText("-");
+
     }
 
     @Override
     public void OnStopLogging() {
-        Toast.makeText(this, "Stopped Logging", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Stopped Logging", Toast.LENGTH_SHORT).show();
+
+        TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
+        txtSatelliteCount.setText("-");
+        TextView txtAccuracy = (TextView) findViewById(R.id.simpleview_txtAccuracy);
+        txtAccuracy.setText("-");
+        ImageView imgDirection = (ImageView) findViewById(R.id.simpleview_imgDirection);
+        imgDirection.setRotation(0);
+        TextView txtDirection = (TextView) findViewById(R.id.simpleview_txtDirection);
+        txtDirection.setText("-");
+        TextView txtSpeed = (TextView) findViewById(R.id.simpleview_txtSpeed);
+        txtSpeed.setText("0 " + getString(R.string.meters_per_second));
     }
 
     @Override
     public void OnWaitingForLocation(boolean inProgress) {
+        ProgressBar spinner;
+        spinner = (ProgressBar)findViewById(R.id.progressWait);
+        if (inProgress)
+            spinner.setVisibility(View.VISIBLE);
+        else
+            spinner.setVisibility(View.GONE);
 
     }
 

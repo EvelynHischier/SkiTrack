@@ -5,13 +5,6 @@ import android.location.Location;
 public interface IGpsLoggingServiceClient {
 
     /**
-     * New message from the service to be displayed on the activity form.
-     *
-     * @param message
-     */
-    public void OnStatusMessage(String message);
-
-    /**
      * Indicates that a fatal error has occurred, logging will stop.
      *
      * @param message
@@ -27,10 +20,8 @@ public interface IGpsLoggingServiceClient {
 
     /**
      * New satellite count has been obtained.
-     *
-     * @param count
      */
-    public void OnSatelliteCount(int count);
+    public void OnSatelliteCount();
 
     /**
      * Asking the calling activity form to clear itself.

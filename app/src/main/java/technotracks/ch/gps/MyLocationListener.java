@@ -14,12 +14,10 @@ import java.util.Iterator;
 
 public class MyLocationListener implements LocationListener, GpsStatus.Listener {
 
-    private static String listenerName;
     private static GpsLoggingService loggingService;
 
-    public MyLocationListener(GpsLoggingService activity, String name) {
+    public MyLocationListener(GpsLoggingService activity) {
         loggingService = activity;
-        listenerName = name;
     }
 
     /**
@@ -32,7 +30,7 @@ public class MyLocationListener implements LocationListener, GpsStatus.Listener 
                 loggingService.OnLocationChanged(loc);
 
         } catch (Exception ex) {
-            loggingService.SetStatus(ex.getMessage());
+            loggingService.SetFatalMessage(ex.getMessage());
         }
 
     }
@@ -64,6 +62,7 @@ public class MyLocationListener implements LocationListener, GpsStatus.Listener 
         switch (event) {
             case GpsStatus.GPS_EVENT_FIRST_FIX:
                 System.out.println("GPS Event First Fix");
+                loggingService.NotifyClientGPSFix();
                 break;
 
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
