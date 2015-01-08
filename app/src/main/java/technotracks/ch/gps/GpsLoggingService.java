@@ -15,9 +15,10 @@ import technotracks.ch.common.Session;
 import technotracks.ch.common.Utilities;
 
 public class GpsLoggingService extends Service  {
+
+
     private static IGpsLoggingServiceClient mainServiceClient;
     private final IBinder binder = new GpsLoggingBinder();
-    AlarmManager nextPointAlarmManager;
 
     // ---------------------------------------------------
     // Helpers and managers
@@ -46,7 +47,7 @@ public class GpsLoggingService extends Service  {
 
     @Override
     public void onCreate() {
-        nextPointAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
     }
 
 
@@ -70,22 +71,22 @@ public class GpsLoggingService extends Service  {
 
     private void HandleIntent(Intent intent) {
         if (intent != null) {
-            Bundle bundle = intent.getExtras();
-
-            if (bundle != null) {
-                boolean stopRightNow = bundle.getBoolean("immediatestop");
-                boolean startRightNow = bundle.getBoolean("immediatestart");
-
-                if (startRightNow) {
-                    System.out.println("Intent received - Start Logging Now");
-                    StartLogging();
-                }
-
-                if (stopRightNow) {
-                    System.out.println("Intent received - Stop logging now");
-                    StopLogging();
-                }
-            }
+//            Bundle bundle = intent.getExtras();
+//
+//            if (bundle != null) {
+//                boolean stopRightNow = bundle.getBoolean("immediatestop");
+//                boolean startRightNow = bundle.getBoolean("immediatestart");
+//
+//                if (startRightNow) {
+//                    System.out.println("Intent received - Start Logging Now");
+//                    StartLogging();
+//                }
+//
+//                if (stopRightNow) {
+//                    System.out.println("Intent received - Stop logging now");
+//                    StopLogging();
+//                }
+//            }
 
             if (Session.isStarted()) {
                 StartGpsManager();
@@ -104,7 +105,6 @@ public class GpsLoggingService extends Service  {
      * Resets the form, resets file name if required, reobtains preferences
      */
     public void StartLogging() {
-        System.out.println(".");
         Session.setAddNewTrackSegment(true);
 
         if (Session.isStarted()) {
@@ -158,6 +158,7 @@ public class GpsLoggingService extends Service  {
 
         gpsLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        // TODO CHECK IF GPS IS ENABLED
         if (Session.isGpsEnabled()) {
 
             // gps satellite based
@@ -258,7 +259,6 @@ public class GpsLoggingService extends Service  {
      * @param loc Location object
      */
     void OnLocationChanged(Location loc) {
-
         if (!Session.isStarted()) {
             System.out.println("OnLocationChanged called, but Session.isStarted is false");
             StopLogging();
@@ -271,13 +271,11 @@ public class GpsLoggingService extends Service  {
         Session.setCurrentLocationInfo(loc);
         SetDistanceTraveled(loc);
 
-        if (IsMainFormVisible())
+        if (IsMainFormVisible()) {
             mainServiceClient.OnLocationUpdate(loc);
-
+        }
 
     }
-
-
 
     private void SetDistanceTraveled(Location loc) {
         // Distance

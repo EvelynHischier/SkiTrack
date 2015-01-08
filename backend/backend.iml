@@ -41,6 +41,11 @@
     <orderEntry type="library" exported="" name="servlet-api-2.5" level="project" />
     <orderEntry type="library" exported="" name="appengine-api-1.0-sdk-1.9.14" level="project" />
     <orderEntry type="library" exported="" name="guava-17.0" level="project" />
+    <orderEntry type="library" exported="" name="el-ri-1.0" level="project" />
+    <orderEntry type="library" exported="" name="jsf-api-2.1" level="project" />
+    <orderEntry type="library" exported="" name="jsf-impl-2.1.0" level="project" />
+    <orderEntry type="library" exported="" name="jndi-1.2.1" level="project" />
+    <orderEntry type="library" exported="" name="javax.faces-2.1.7" level="project" />
   </component>
 </module>
 

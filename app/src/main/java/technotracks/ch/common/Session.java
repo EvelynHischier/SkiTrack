@@ -12,7 +12,6 @@ public class Session extends Application {
     private static boolean isStarted;
     private static boolean isUsingGps;
     private static int satellites;
-    private static float autoSendDelay;
     private static long startTimeStamp;
     private static long latestTimeStamp;
     private static boolean addNewTrackSegment = true;
@@ -178,20 +177,6 @@ public class Session extends Application {
      */
     public static void setAddNewTrackSegment(boolean addNewTrackSegment) {
         Session.addNewTrackSegment = addNewTrackSegment;
-    }
-
-    /**
-     * @param autoSendDelay the autoSendDelay to set
-     */
-    public static void setAutoSendDelay(float autoSendDelay) {
-        Session.autoSendDelay = autoSendDelay;
-    }
-
-    /**
-     * @return the autoSendDelay to use for the timer
-     */
-    public static float getAutoSendDelay() {
-        return autoSendDelay;
     }
 
     /**

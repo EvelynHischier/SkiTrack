@@ -52,11 +52,8 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
     private GpsLoggingService loggingService;
 
     private final String STATE_RECORDING = "Recording";
-    private final String STATE_CURRENT_TRACK = "Track";
     private final String STATE_POINTS = "Points";
-    private int satelliteNumber;
-    private Track currentTrack;
-    private List<GPSData> points;
+
 
     private GoogleApiClient mLocationClient;
     private LocationRequest mLocationRequest;
@@ -66,19 +63,6 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            mUpdatesRequested = savedInstanceState.getBoolean(STATE_RECORDING);
-            // TODO
-            //currentTrack = (Track) savedInstanceState.getSerializable(STATE_CURRENT_TRACK);
-
-            points = (ArrayList<GPSData>) savedInstanceState
-                    .getSerializable(STATE_POINTS);
-        } else {
-            mUpdatesRequested = false;
-            savedInstanceState = new Bundle();
-            savedInstanceState.putBoolean(STATE_RECORDING, mUpdatesRequested);
-        }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record_track);
 
@@ -92,10 +76,11 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
 
         setImageTooltips();
 
-        if(!((LocationManager)getSystemService(LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER))
-        {
+        if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
             NoGPSDialog.showNoGPSDialog(this);
-        }
+            Session.setGpsEnabled(false);
+        }else
+            Session.setGpsEnabled(true);
 
         // Toggle the play and pause.
         toggleComponent = ToggleComponent.getBuilder()
@@ -106,14 +91,10 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onStatusChange(boolean status) {
                         if (status) {
-                            //requestStartLogging();
-                            //startCapture();
                             loggingService.StartLogging();
 
                         } else {
                             loggingService.StopLogging();
-//                            stopCapture();
-//                            requestStopLogging();
                         }
                     }
                 })
@@ -169,14 +150,6 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
         StopAndUnbindServiceIfRequired();
         super.onDestroy();
 
-    }
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean(STATE_RECORDING, mUpdatesRequested);
-        // TODO COMMEEEENNNNNNNT
-        // outState.putSerializable(STATE_CURRENT_TRACK, currentTrack);
-        outState.putSerializable(STATE_POINTS, (Serializable) points);
-        super.onSaveInstanceState(outState);
     }
 
 //    @Override
@@ -324,11 +297,11 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
 //
 //    @Override
 //    public void onConnectionSuspended(int i) {
-//        // TODO yolo
+//
 //    }
 
     public void SetLocation(Location locationInfo) {
-
+        System.out.println("MainForm.Location set");
         NumberFormat nf = NumberFormat.getInstance();
         nf.setMaximumFractionDigits(6);
 
@@ -582,23 +555,43 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
     }
 
     @Override
-    public void OnLocationUpdate(Location loc) {
+    public void OnLocationUpdate(Location location) {
+        // Report to the UI that the location was updated
+        System.out.println("MainForm.Location received");
+//        GPSData point = new GPSData();
+//
+//        point.setLatitude(location.getLatitude());
+//        point.setLongitude(location.getLongitude());
+//        point.setAltitude(location.getAltitude());
+//        point.setSatellites(Session.getSatelliteCount());
+//        point.setAccuracy(location.getAccuracy());
+//        point.setTimestamp(new DateTime(location.getTime()));
+//        point.setSpeed(location.getSpeed());
+//        point.setBearing(location.getBearing());
 
+        // if the track is not stored yet (asynchronus)
+        // use -> getIdTrack
+       // point.setTrackID(currentTrack.getId() == null ? DatabaseAccess.getIdTrack(): this.currentTrack.getId());
+      //  points.add(point);
+        SetLocation(location);
+        //DatabaseAccess.writeGPSData(this, point);
     }
 
     @Override
     public void OnSatelliteCount(int count) {
-
+        Session.setSatelliteCount(count);
+        TextView txtSatelliteCount = (TextView) findViewById(R.id.simpleview_txtSatelliteCount);
+        txtSatelliteCount.setText(String.valueOf(count));
     }
 
     @Override
     public void OnStartLogging() {
-
+        Toast.makeText(this, "Started Logging", Toast.LENGTH_SHORT);
     }
 
     @Override
     public void OnStopLogging() {
-
+        Toast.makeText(this, "Stopped Logging", Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -606,50 +599,4 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    /**
-     * A custom gps status listener. Update the satellite number
-     * @author Joel
-     *
-     */
-//    private class MyGpsStatusListener implements GpsStatus.Listener
-//    {
-//        /**
-//         * Called when the gps status change (typically when the number of satellites change)
-//         */
-//        @Override
-//        public void onGpsStatusChanged(int event)
-//        {
-//            if(event == GpsStatus.GPS_EVENT_SATELLITE_STATUS)
-//            {
-//                int currentSatelliteNumber = getSatelliteNumber();
-//
-//				/* if we can update display we do it
-//				   update only if satellite number change */
-//                if(currentSatelliteNumber != satelliteNumber)
-//                {
-//                    satelliteNumber = currentSatelliteNumber;
-//                }
-//            }
-//        }
-
-        /**
-         * Give the number of satellite currently locked
-         * @return
-         * The number of satellites
-         */
-        /*private int getSatelliteNumber()
-        {
-            int satNumber = 0;
-
-			/* Count the number of satellites */
-/*
-            GpsStatus gpsStatus = manager.getGpsStatus(null);
-            for (GpsSatellite ignored : gpsStatus.getSatellites())
-            {
-                satNumber++;
-            }
-
-            return gpsStatus.getMaxSatellites();
-        }*/
-    //}
 }

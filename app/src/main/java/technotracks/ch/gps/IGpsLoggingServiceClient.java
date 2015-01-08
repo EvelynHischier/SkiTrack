@@ -21,9 +21,9 @@ public interface IGpsLoggingServiceClient {
     /**
      * A new location fix has been obtained.
      *
-     * @param loc
+     * @param location
      */
-    public void OnLocationUpdate(Location loc);
+    public void OnLocationUpdate(Location location);
 
     /**
      * New satellite count has been obtained.
