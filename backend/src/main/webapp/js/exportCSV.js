@@ -8,7 +8,6 @@ function CSVGenerator(content) {
     CSV = content;
 
     if (CSV == '') {
-        alert(content);
         alert("Invalid data");
         return;
     }

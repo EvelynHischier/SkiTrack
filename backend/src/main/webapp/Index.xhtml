@@ -18,36 +18,15 @@
     <h1>Ski Tracks - Welcome</h1>
 
     <h:form>
-        <h:inputText value="#{helloBean.name}"/>
-        <h:commandButton value="Welcome Me" action="welcome"/>
-        <br/>
-        <br/>
 
         <h:commandButton value="Export the data"
                          type="submit"
                          onclick="startCSV();" />
 
-        <br/>
-        <br/>
-
-        <br/>
-
-        <h:commandButton value="Profil" action="profil"/>
-        <br/>
-        <br/>
-
-        <h:commandButton value="Filter" action="filter"/>
-        <br/>
-        <br/>
-
-        <h:commandButton value="Create a championship" action="championship"/>
-
 
         <script type="text/javascript">
             function startCSV(){
-            alert('bevor get text');
-            var data = "#{helloBean.CSVText}";
-                alert(data);
+            var data = "#{serviceBean.CSVText}";
                 CSVGenerator(data);
             }
 
