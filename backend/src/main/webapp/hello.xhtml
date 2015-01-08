@@ -6,20 +6,53 @@
       xmlns:h="http://java.sun.com/jsf/html">
 
 <h:head>
-    <title>Ski Tracks !</title>
+    <title>Ski Tracks</title>
     <link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+
+    <script src="js/jquery-1.9.0.min.js" type="text/javascript" />
+    <script src="js/exportCSV.js" type="text/javascript" />
 </h:head>
-<!--dgfdgf dfg fdgdfg dfgfdg sfdsdf -->
+
 <h:body>
     <h1>Ski Tracks - Welcome</h1>
+
     <h:form>
-        <h:inputText value="#{helloBean.name}"></h:inputText>
-        <h:commandButton value="Welcome Me" action="welcome"></h:commandButton><br/><br/>
-        <h:commandButton value="Export the data" action="#{helloBean.getGPSData}"></h:commandButton><br/><br/>
-        <h:commandButton value="Profil" action="profil"></h:commandButton><br/><br/>
-        <h:commandButton value="Filter" action="filter"></h:commandButton><br/><br/>
-        <h:commandButton value="Create a championship" action="championship"></h:commandButton>
+        <h:inputText value="#{helloBean.name}"/>
+        <h:commandButton value="Welcome Me" action="welcome"/>
+        <br/>
+        <br/>
+
+        <h:commandButton value="Export the data"
+                         type="submit"
+                         onclick="startCSV();" />
+
+        <br/>
+        <br/>
+
+        <br/>
+
+        <h:commandButton value="Profil" action="profil"/>
+        <br/>
+        <br/>
+
+        <h:commandButton value="Filter" action="filter"/>
+        <br/>
+        <br/>
+
+        <h:commandButton value="Create a championship" action="championship"/>
+
+
+        <script type="text/javascript">
+            function startCSV(){
+            alert('bevor get text');
+            var data = "#{helloBean.CSVText}";
+                alert(data);
+                CSVGenerator(data);
+            }
+
+        </script>
+
     </h:form>
 </h:body>
 </html>
