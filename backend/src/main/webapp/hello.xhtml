@@ -6,13 +6,20 @@
       xmlns:h="http://java.sun.com/jsf/html">
 
 <h:head>
-    <title>GAE + JSF</title>
+    <title>Ski Tracks !</title>
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
 </h:head>
+<!--dgfdgf dfg fdgdfg dfgfdg sfdsdf -->
 <h:body>
-    <h1>Google App Engine + JSF 2.0 example - hello.xhtml</h1>
+    <h1>Ski Tracks - Welcome</h1>
     <h:form>
         <h:inputText value="#{helloBean.name}"></h:inputText>
-        <h:commandButton value="Welcome Me" action="welcome"></h:commandButton>
+        <h:commandButton value="Welcome Me" action="welcome"></h:commandButton><br/><br/>
+        <h:commandButton value="Export the data" action="#{helloBean.getGPSData}"></h:commandButton><br/><br/>
+        <h:commandButton value="Profil" action="profil"></h:commandButton><br/><br/>
+        <h:commandButton value="Filter" action="filter"></h:commandButton><br/><br/>
+        <h:commandButton value="Create a championship" action="championship"></h:commandButton>
     </h:form>
 </h:body>
 </html>

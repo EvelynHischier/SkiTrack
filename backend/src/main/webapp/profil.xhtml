@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html">
+
+<!--TODO delete -->
+<h:head>
+    <title>Ski Tracks !</title>
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+</h:head>
+<h:body>
+    <h1>Profil informations</h1>
+    <h:form>
+
+        <p><label>Nationality</label> <input type="text" id="nationality"></input></p>
+        <p><label>Country</label> <input type="text" id="country"></input></p>
+        <p><label>Gender</label><form>
+            <input class="sakol" type="radio" name="group1" value="Man">Man</input>
+            <input class="sakol" type="radio" name="group1" value="Woman">Woman</input>
+        </form></p>
+        <p><label>Age</label> <input type="text" id="age"></input></p>
+        <p><label>Disability</label> <input type="text" id="disability"></input></p>
+        <button type="button" onclick="sakol()">Accept changes</button>
+
+
+
+    </h:form>
+</h:body>
+</html>
