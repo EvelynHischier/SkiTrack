@@ -12,11 +12,13 @@ import com.googlecode.objectify.cmd.Query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 import ch.technotracks.backend.GPSData;
 import ch.technotracks.backend.GPSDataEndpoint;
+import ch.technotracks.export.CSVFile;
 
 import javax.annotation.Nullable;
 import javax.faces.bean.ManagedBean;
@@ -33,15 +35,6 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 @SessionScoped
 public class HelloBean implements Serializable{
 
-    public Collection<GPSData> getGPSData(){
-
-        String cursor = null;
-        CollectionResponse list = new GPSDataEndpoint().list(cursor, 100);
-
-
-        return list.getItems();
-    }
-
     private static final long serialVersionUID = 1L;
 
     private String name;
@@ -53,4 +46,21 @@ public class HelloBean implements Serializable{
     public void setName(String name) {
         this.name = name;
     }
+
+    public Collection<GPSData> getGPSData(){
+
+        String cursor = null;
+        CollectionResponse list = new GPSDataEndpoint().list(cursor, 100);
+
+        return list.getItems();
+    }
+
+    public String getCSVText(){
+        Collection list = getGPSData();
+        Date today = new Date();
+
+        return CSVFile.generateCSVFile(list);
+    }
+
+
 }
