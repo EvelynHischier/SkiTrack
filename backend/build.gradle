@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.14'
+        classpath 'com.google.appengine:gradle-appengine-plugin:1.9.17'
     }
 }
 
@@ -22,16 +22,17 @@ sourceCompatibility = JavaVersion.VERSION_1_7
 targetCompatibility = JavaVersion.VERSION_1_7
 
 dependencies {
-    appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.14'
-    compile 'com.google.appengine:appengine-endpoints:1.9.14'
-    compile 'com.google.appengine:appengine-endpoints-deps:1.9.14'
+    appengineSdk 'com.google.appengine:appengine-java-sdk:1.9.17'
+    compile 'com.google.appengine:appengine-endpoints:1.9.17'
+    compile 'com.google.appengine:appengine-endpoints-deps:1.9.17'
     compile 'com.googlecode.objectify:objectify:5.0.3'
     compile 'javax.servlet:servlet-api:2.5'
     compile files('src/main/webapp/WEB-INF/lib/el-ri-1.0.jar')
-    compile files('src/main/webapp/WEB-INF/lib/jsf-api-2.1.jar')
-    compile files('src/main/webapp/WEB-INF/lib/jsf-impl-2.1.0.jar')
     compile files('src/main/webapp/WEB-INF/lib/jndi-1.2.1.jar')
-    compile files('src/main/webapp/WEB-INF/lib/javax.faces-2.1.7.jar')
+    compile files('src/main/webapp/WEB-INF/lib/javax.faces-api-2.2.jar')
+    compile files('src/main/webapp/WEB-INF/lib/javax.faces.jar')
+    compile files('src/main/webapp/WEB-INF/lib/jsf-api-2.1.7.jar')
+    compile files('src/main/webapp/WEB-INF/lib/jsf-impl-2.1.7.jar')
 }
 
 appengine {

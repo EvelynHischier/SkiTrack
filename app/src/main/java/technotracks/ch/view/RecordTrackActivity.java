@@ -50,7 +50,7 @@ public class RecordTrackActivity extends BaseActivity implements View.OnClickLis
         if (!((LocationManager) getSystemService(LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER)){
             NoGPSDialog.showNoGPSDialog(this);
             Session.setGpsEnabled(false);
-        }else
+        } else
             Session.setGpsEnabled(true);
 
         // Toggle the play and pause.
