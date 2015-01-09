@@ -13,10 +13,6 @@ import java.util.ArrayList;
 
 import technotracks.ch.R;
 
-/**
- * Created by Blechfalke on 16.12.14.
- */
-
 public class NavDrawerListAdapter extends BaseAdapter {
 
     private Context context;

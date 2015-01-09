@@ -10,8 +10,6 @@ import android.location.LocationListener;
 import android.location.LocationProvider;
 import android.os.Bundle;
 
-import java.util.Iterator;
-
 public class MyLocationListener implements LocationListener, GpsStatus.Listener {
 
     private static GpsLoggingService loggingService;

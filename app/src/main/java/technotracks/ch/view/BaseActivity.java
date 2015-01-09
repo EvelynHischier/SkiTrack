@@ -7,7 +7,6 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,8 +28,6 @@ import technotracks.ch.database.Synchronize;
 @SuppressWarnings("deprecation")
 public class BaseActivity extends Activity {
 
-    public final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    protected RelativeLayout _completeLayout, _activityLayout;
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -55,10 +52,7 @@ public class BaseActivity extends Activity {
                 R.array.nav_drawer_icons); // load icons from strings.xml
 
         set(navMenuTitles, navMenuIcons);
-        if (savedInstanceState == null) {
-            // on first time display view for first nav item
-//			displayView(0);
-        }
+
     }
 
     public void set(String[] navMenuTitles, TypedArray navMenuIcons) {
@@ -67,12 +61,12 @@ public class BaseActivity extends Activity {
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-        navDrawerItems = new ArrayList<NavDrawerItem>();
+        navDrawerItems = new ArrayList<>();
 
         // adding nav drawer items
         if (navMenuIcons == null) {
-            for (int i = 0; i < navMenuTitles.length; i++) {
-                navDrawerItems.add(new NavDrawerItem(navMenuTitles[i]));
+            for (String navMenuTitle : navMenuTitles) {
+                navDrawerItems.add(new NavDrawerItem(navMenuTitle));
             }
         } else {
             for (int i = 0; i < navMenuTitles.length; i++) {
@@ -89,15 +83,17 @@ public class BaseActivity extends Activity {
         mDrawerList.setAdapter(adapter);
 
         // enabling action bar app icon and behaving it as toggle button
-    try {
-        getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-    }
-    catch (Exception e){
+        try {
+            if (getActionBar() != null) {
+                getActionBar().setDisplayHomeAsUpEnabled(true);
+                getActionBar().setHomeButtonEnabled(true);
+            }
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
 
-    }
-
-         //getSupportActionBar().setIcon(R.drawable.ic_drawer);
+        //getSupportActionBar().setIcon(R.drawable.ic_drawer);
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, // nav menu toggle icon
@@ -190,7 +186,8 @@ public class BaseActivity extends Activity {
     @Override
     public void setTitle(CharSequence title) {
         mTitle = title;
-        getActionBar().setTitle(mTitle);
+        if (getActionBar() != null)
+            getActionBar().setTitle(mTitle);
     }
 
     /**
@@ -223,31 +220,9 @@ public class BaseActivity extends Activity {
     }
 
     public void buttonSync(View view){
-
-//        Track track = new Track();
-//
-//        track.setName("local track");
-//        track.setSync(false);
-//        track.setCreate(new DateTime(new Date()));
-//
-//        DatabaseAccess.openConnection(this);
-//        track.setId(DatabaseAccess.writeTrack(track));
-
         Synchronize sync = new Synchronize();
 
-  //      List<User> users  =  DatabaseAccess.readUser(this);
-//
-//
-//        sync.new SyncUser(this, users).execute();
-
-//        for (User user: users)
-//        DatabaseAccess.updateToSynced(this, user.getId(), SQLHelper.TABLE_NAME_USER);
-//
-//        Log.i("size ", users.size()+"");
-//        Log.i("User", users.get(0).getFirstname()+" : "+users.get(0).getPassword());
-
-
-        // track & gps
+        // Synchronize tracks & gps
         List<Track> tracks = DatabaseAccess.readTrack(this);
         sync.new SyncTrack(this, tracks).execute();
 

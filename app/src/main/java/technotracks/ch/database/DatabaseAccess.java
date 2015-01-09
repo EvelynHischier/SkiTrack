@@ -4,11 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 import com.google.api.client.util.DateTime;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +81,7 @@ public class DatabaseAccess {
 
     // reads every track which is not synchronized
     public static List<Track> readTrack(Context context){
-        List<Track> tracks = new ArrayList<Track>();
+        List<Track> tracks = new ArrayList<>();
         Track track;
         String dateText;
         Cursor cursor;
@@ -115,7 +113,7 @@ public class DatabaseAccess {
 
     // get all stored tracks (used in history)
     public static List<Track> readTrackHistory(Context context){
-        List<Track> tracks = new ArrayList<Track>();
+        List<Track> tracks = new ArrayList<>();
         Track track;
         String dateText;
         Cursor cursor;
@@ -135,7 +133,7 @@ public class DatabaseAccess {
             track.setName(cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_NAME)));
 
             sync = cursor.getInt(cursor.getColumnIndex(SQLHelper.SYNC));
-            track.setSync(sync == 0 ? false : true);
+            track.setSync(sync != 0);
 
             dateText = cursor.getString(cursor.getColumnIndex(SQLHelper.TRACK_CREATE));
             track.setCreate(new DateTime(dateText));
@@ -168,7 +166,7 @@ public class DatabaseAccess {
         return database.insert(SQLHelper.TABLE_NAME_GPSDATA, null, values);
     }
     public static List<GPSData> readGPSData(Context context, long trackIdOld) {
-        List<GPSData> points = new ArrayList<GPSData>();
+        List<GPSData> points = new ArrayList<>();
         GPSData point;
         Cursor cursor;
         String dateText;
@@ -200,7 +198,7 @@ public class DatabaseAccess {
 
     // replaces the local trackId with the id of app engine
     public static List<GPSData> readGPSDataToUpload(Context context, long trackIdOld, long trackIdNEw) {
-        List<GPSData> points = new ArrayList<GPSData>();
+        List<GPSData> points = new ArrayList<>();
         GPSData point;
         Cursor cursor;
         String dateText;
